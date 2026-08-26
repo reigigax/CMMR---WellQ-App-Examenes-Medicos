@@ -73,16 +73,23 @@
 ---
 ### Comandos de Manejo de Cambios entre Ramas
 ##### | Link de Informacion:
-##### | (13) https://git-scm.com/book/es/v2/Ramificaciones-en-Git-Procedimientos-B%C3%A1sicos-para-Ramificar-y-Fusionar
+##### | (13 y 15) https://git-scm.com/book/es/v2/Fundamentos-de-Git-Trabajar-con-Remotos#r_fetching_and_pulling
+##### | (14) https://git-scm.com/book/es/v2/Ramificaciones-en-Git-Procedimientos-B%C3%A1sicos-para-Ramificar-y-Fusionar
 ---
 
-#### 13.- ***git merge {nombre de la rama}***
+#### 13.- ***git fetch {nombre de la rama}***
+> Este comando trae todas las modificaciones realizadas a la rama llamada, sin embargo estos datos que trae este comando no modificar tu código ni las ramas locales actuales *(este comando nos sirve para traer modificaciones realizadas desde otras remas sin interrumpir nuestra area de trabajo)*
+
+#### 14.- ***git merge {nombre de la rama}***
 > Este comando nos permite combinar cambios entre ramas, para realizar esto es necesario irse o estar en la rama la cual le queremos `aplicar los cambios`, *esto se puede realizar con el comando `git checkout`*, luego debemos indicar el nombre de la rama donde se presentan los cambios para asi aplicarlos a la rama correspondiente. *(este comando es importante manejarlo con cuidado ya que este es el que definira si se van a la rama principal los cambios o añadidos realizados)*
 >
 > Ejemplo de aplicacion de cambios de la rama "parche_01" a la rama principal "main":
 >> - **`git branch`** *(este comando nos indicara en que rama estamos indicada por el simbolo `*` que se encontraria al lado izquierdo del nombre de la rama)*
 >> - **`git checkout main`** *(este comando se realizaria solo en el caso de que no estubieramos en la rama main)*
 >> - **`git merge parche_01`** *(una vez en la rama principal "main" aplicamos este comando el cual traera los cambios trabajados en la rama "parche_01" y los aplicara localmente a la rama principal "main" en la cual nos encontramos, para que se apliquen al repositorio es necesario de realizar un `git push -u origin main`)*
+
+#### 15.- ***git pull {nombre de la rama}***
+> Este comando realiza las funciones de los comandos previos `git fetch` y `git merge`, lo que basicamente termina trayendo los ultimos cambios realizados en la rama y aplicandolos localmente
 
 
 ---
