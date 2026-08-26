@@ -31,7 +31,7 @@
 #### 4.- ***git status***
 > Este comando nos sirve para visualizar cuales son los archivos los cuales fueron seleccionados para subirse y los archivos que no se han seleccionado aun y oresentan un cambio pendiente por subir. *(principalmente nos puede servir para verificar cuales archivos tenemos confirmados para subir y cuales no)*
 
-#### 5.- ***git reset HEAD***
+#### 5.- ***git reset HEAD {nombre del archivo}***
 > Este comando nos permite quitar de la confirmacion un archivo seleccionado previamente. *(nos sirve para quitar algun archivo que no queremos subir porque esta incompleto o no es relevante)* 
 
 #### 6.- ***git remote add origin {link del repositorio}***
