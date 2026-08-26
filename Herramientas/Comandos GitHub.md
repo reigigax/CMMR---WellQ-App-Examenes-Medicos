@@ -1,8 +1,8 @@
 # Guia de Comandos de GitHub
-Estos comandos nos serviran para trabajar con ramas para subir avances u archivos del proyecto
-### ---
+### Estos comandos nos serviran para trabajar con ramas para subir avances u archivos del proyecto
+---
 ### Commandos Escenciales
-### ---
+---
 #### ***git init***
 > Este comando nos sirve para iniciar el programa de GitHub en el proyecto actual *(se recomienda usarlo al principio de la subida de archivos)*
 
