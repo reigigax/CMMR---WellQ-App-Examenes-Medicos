@@ -10,6 +10,7 @@ Fase 1
         |_____ Apellido_Nombre_1.2_APT122_DiarioReflexionFase1.docx             (4)
         |_____ Apellido_Nombre_1.3_APT122_AutoevaluacionFase1.docx              (4)
 
+
 Fase 2
 |_____ Evidencias Grupales      (3)
 |       |_____ 2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT.docx
@@ -31,6 +32,8 @@ Fase 2
         |_____ Evidencias de Sistema
                 |_____ Aplicación (WellQWebApp)
                 |_____ Base de datos
+
+
 Fase 3
 |_____ Evidencias Grupales      (2)
 |       |_____ PLANILLA DE EVALUACIÓN FASE 3.xlsx
@@ -38,6 +41,7 @@ Fase 3
 |
 |_____ Evidencias Individuales  (4)
         |_____ Apellido_Nombre_3.1_APT122_DiarioReflexionFase3.docx
+
 
 Herramientas
 |_____ Comandos GitHub          (2)
@@ -47,5 +51,6 @@ Herramientas
 |_____ Estructurado             (2)
         |_____ Carpetas del Repositorio.md
         |_____ Estructura del Repositorio de GitHub.png
+
 
 README.md
