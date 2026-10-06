@@ -26,7 +26,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
+    # Applicaciones de Django (exams_manager)
+    'exams_manager',
+
     # Frameworks instalados
     'rest_framework',
 ]
