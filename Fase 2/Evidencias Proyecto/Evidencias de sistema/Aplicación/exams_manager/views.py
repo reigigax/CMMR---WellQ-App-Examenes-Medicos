@@ -21,3 +21,34 @@ def upload(request):
 # Pagina de Colsulta y Visualizacion de Examenes Medicos
 def home(request):
     return render(request, 'exams_manager/home.html')
+
+def clinico(request):
+    documentos = [
+        {
+            "paciente": "Juan Perez",
+            "rut": "11.111.111-1",
+            "tipo": "Receta Medica",
+            "fecha": "01-01-2026",
+            "estado": "Disponible",
+        },
+        {
+            "paciente": "Juan Perez",
+            "rut": "11.111.111-1",
+            "tipo": "Licencia Medica",
+            "fecha": "01-01-2026",
+            "estado": "Disponible",
+        },
+        {
+            "paciente": "Juan Perez",
+            "rut": "11.111.111-1",
+            "tipo": "Receta Medica",
+            "fecha": "01-01-2026",
+            "estado": "Disponible",
+        },
+    ]
+
+    return render(
+        request,
+        "exams_manager/clinico.html",
+        {"documentos": documentos},
+    )

@@ -1,0 +1,1249 @@
+{% extends "base.html" %}
+
+{% block title %}
+Panel Clínico | WellQ
+{% endblock %}
+
+{% block content %}
+
+<div class="clinical-layout">
+
+    <!-- ==================================================
+         MENÚ LATERAL
+    =================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-circle"></div>
+
+            <span>WellQ</span>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <!-- INICIO -->
+
+            <a href="#">
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 11.5L12 4l9 7.5"/>
+                        <path d="M5 10v10h14V10"/>
+                        <path d="M9 20v-6h6v6"/>
+                    </svg>
+
+                </span>
+
+                <span class="menu-text">
+                    Inicio
+                </span>
+
+            </a>
+
+
+            <!-- DOCUMENTOS -->
+
+            <a href="#">
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2h9l5 5v15H6z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M9 13h8"/>
+                        <path d="M9 17h8"/>
+                    </svg>
+
+                </span>
+
+                <span class="menu-text">
+                    Documentos
+                </span>
+
+            </a>
+
+
+            <!-- MIS ARCHIVOS -->
+
+            <a href="#">
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 6h16"/>
+                        <path d="M4 12h16"/>
+                        <path d="M4 18h16"/>
+                    </svg>
+
+                </span>
+
+                <span class="menu-text">
+                    Mis Archivos
+                </span>
+
+            </a>
+
+
+            <!-- PACIENTES -->
+
+            <a href="{% url 'clinico' %}" class="active">
+
+                <span class="menu-icon">
+
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="8" r="4"/>
+                        <path d="M2.5 20c0-4 2.8-7 6.5-7s6.5 3 6.5 7"/>
+                        <circle cx="17" cy="9" r="3"/>
+                        <path d="M16 14c3.3 0 5.5 2.4 5.5 6"/>
+                    </svg>
+
+                </span>
+
+                <span class="menu-text">
+                    Pacientes
+                </span>
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- ==================================================
+         CONTENIDO PRINCIPAL
+    =================================================== -->
+
+    <main class="main-content">
+
+        <!-- BARRA SUPERIOR -->
+
+        <header class="topbar">
+
+            <div></div>
+
+            <div class="profile">
+
+                <div class="profile-icon">
+
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
+                    </svg>
+
+                </div>
+
+                <span>Clínico</span>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==================================================
+             CONTENIDO
+        =================================================== -->
+
+        <section class="content-card">
+
+            <!-- TITULO -->
+
+            <div class="page-header">
+
+                <h1>
+                    Documento de Pacientes
+                </h1>
+
+                <p>
+                    Consulte y gestione los documentos médicos de sus pacientes.
+                </p>
+
+            </div>
+
+
+            <!-- ==================================================
+                 FILTROS
+            =================================================== -->
+
+            <div class="filters">
+
+                <!-- BUSCADOR -->
+
+                <div class="search-box">
+
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="7"/>
+                        <path d="M16.5 16.5L21 21"/>
+                    </svg>
+
+                    <input
+                        type="text"
+                        placeholder="Buscar por nombre, RUT o tipo de documento..."
+                    >
+
+                </div>
+
+
+                <!-- TIPO DE DOCUMENTO -->
+
+                <div class="filter">
+
+                    <label>
+                        Tipo de documento
+                    </label>
+
+                    <select>
+
+                        <option value="">
+                            Todos
+                        </option>
+
+                        <option value="receta">
+                            Receta Médica
+                        </option>
+
+                        <option value="licencia">
+                            Licencia Médica
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ESTADO -->
+
+                <div class="filter">
+
+                    <label>
+                        Estado
+                    </label>
+
+                    <select>
+
+                        <option value="">
+                            Todos
+                        </option>
+
+                        <option value="disponible">
+                            Disponible
+                        </option>
+
+                        <option value="pendiente">
+                            Pendiente
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 TABLA
+            =================================================== -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Paciente
+                            </th>
+
+                            <th>
+                                RUT
+                            </th>
+
+                            <th>
+                                Tipo de Documento
+                            </th>
+
+                            <th>
+                                Fecha de Emisión
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Acciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for documento in documentos %}
+
+                        <tr>
+
+                            <!-- PACIENTE -->
+
+                            <td>
+
+                                <div class="patient">
+
+                                    <div class="avatar">
+
+                                        <svg viewBox="0 0 24 24">
+                                            <circle cx="12" cy="8" r="4"/>
+                                            <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
+                                        </svg>
+
+                                    </div>
+
+                                    <span class="patient-name">
+                                        {{ documento.paciente }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- RUT -->
+
+                            <td>
+                                {{ documento.rut }}
+                            </td>
+
+
+                            <!-- DOCUMENTO -->
+
+                            <td>
+                                {{ documento.tipo }}
+                            </td>
+
+
+                            <!-- FECHA -->
+
+                            <td>
+                                {{ documento.fecha }}
+                            </td>
+
+
+                            <!-- ESTADO -->
+
+                            <td>
+
+                                <span class="status">
+                                    {{ documento.estado }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- ACCIONES -->
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <!-- VER -->
+
+                                    <button
+                                        type="button"
+                                        class="action-btn"
+                                        title="Visualizar documento"
+                                    >
+
+                                        <svg viewBox="0 0 24 24">
+
+                                            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/>
+
+                                            <circle
+                                                cx="12"
+                                                cy="12"
+                                                r="3"
+                                            />
+
+                                        </svg>
+
+                                    </button>
+
+
+                                    <!-- DESCARGAR -->
+
+                                    <button
+                                        type="button"
+                                        class="action-btn"
+                                        title="Descargar documento"
+                                    >
+
+                                        <svg viewBox="0 0 24 24">
+
+                                            <path d="M12 3v12"/>
+
+                                            <path d="M7.5 11l4.5 4.5 4.5-4.5"/>
+
+                                            <path d="M5 21h14"/>
+
+                                        </svg>
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="empty-table"
+                            >
+
+                                No existen documentos disponibles.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- ==================================================
+                 PAGINACIÓN
+            =================================================== -->
+
+            <div class="pagination">
+
+                <button type="button">
+                    ‹
+                </button>
+
+                <button
+                    type="button"
+                    class="page-active"
+                >
+                    1
+                </button>
+
+                <button type="button">
+                    ›
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<style>
+/* ==================================================
+   GENERAL
+================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            #173044 0%,
+            #0f1d29 36%,
+            #09131c 72%,
+            #070e15 100%
+        );
+    color: #ffffff;
+}
+
+
+/* ==================================================
+   ESTRUCTURA
+================================================== */
+
+.clinical-layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+
+/* ==================================================
+   SIDEBAR
+================================================== */
+
+.sidebar {
+    width: 220px;
+    min-height: 100vh;
+
+    background: #071722;
+
+    border-right: 1px solid #315064;
+
+    flex-shrink: 0;
+}
+
+
+/* ==================================================
+   LOGO
+================================================== */
+
+.brand {
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 0 18px;
+
+    border-bottom: 1px solid #315064;
+
+    color: #ffffff;
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.brand-circle {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #33eee1,
+            #06b5db,
+            #1599eb
+        );
+
+    border: 1px solid #61f5ed;
+
+    box-shadow:
+        0 0 15px rgba(27, 215, 222, .27),
+        inset 0 0 7px rgba(255,255,255,.22);
+}
+
+
+/* ==================================================
+   MENU
+================================================== */
+
+.menu {
+    display: flex;
+    flex-direction: column;
+
+    padding: 18px 7px;
+}
+
+.menu a {
+    min-height: 56px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 0 17px;
+
+    margin-bottom: 6px;
+
+    border-radius: 8px;
+
+    color: #eaf5fa;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    transition: .2s ease;
+}
+
+.menu a:hover {
+    background: rgba(18, 150, 211, .10);
+}
+
+.menu a.active {
+    background:
+        linear-gradient(
+            90deg,
+            #093149,
+            #092638
+        );
+
+    border-left: 3px solid #16c8ef;
+
+    padding-left: 14px;
+
+    font-weight: 700;
+}
+
+
+/* ==================================================
+   ICONOS MENU
+================================================== */
+
+.menu-icon {
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.menu-icon svg {
+    width: 22px;
+    height: 22px;
+
+    fill: none;
+
+    stroke: #16d0f3;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.menu a:hover .menu-icon svg,
+.menu a.active .menu-icon svg {
+    stroke: #41e4ff;
+
+    filter:
+        drop-shadow(
+            0 0 3px rgba(32, 201, 243, .28)
+        );
+}
+
+
+/* ==================================================
+   CONTENIDO
+================================================== */
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* ==================================================
+   TOPBAR
+================================================== */
+
+.topbar {
+    height: 72px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 24px;
+
+    background: #071722;
+
+    border-bottom: 1px solid #315064;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 700;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #16d8f3;
+
+    border-radius: 50%;
+
+    background: rgba(13, 75, 98, .18);
+}
+
+.profile-icon svg {
+    width: 20px;
+    height: 20px;
+
+    fill: none;
+
+    stroke: #19d7f3;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+
+/* ==================================================
+   TARJETA
+================================================== */
+
+.content-card {
+    max-width: 1200px;
+
+    margin: 24px auto;
+
+    padding: 26px;
+
+    background: rgba(12, 38, 52, .94);
+
+    border: 1px solid #315a6e;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 12px 32px rgba(0,0,0,.18);
+}
+
+
+/* ==================================================
+   TITULO
+================================================== */
+
+.page-header h1 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 27px;
+
+    font-weight: 700;
+}
+
+.page-header p {
+    margin-top: 6px;
+
+    color: #9ec8de;
+
+    font-size: 14px;
+}
+
+
+/* ==================================================
+   FILTROS
+================================================== */
+
+.filters {
+    display: grid;
+
+    grid-template-columns:
+        minmax(290px, 2fr)
+        minmax(160px, .9fr)
+        minmax(160px, .9fr);
+
+    gap: 18px;
+
+    align-items: end;
+
+    margin-top: 26px;
+    margin-bottom: 22px;
+}
+
+
+/* ==================================================
+   BUSCADOR
+================================================== */
+
+.search-box {
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 13px;
+
+    background: #17384a;
+
+    border: 1px solid #5a7f92;
+
+    border-radius: 8px;
+
+    transition: .2s;
+}
+
+.search-box:focus-within {
+    border-color: #32c9f2;
+
+    box-shadow:
+        0 0 0 2px rgba(31, 190, 239, .08);
+}
+
+.search-box svg {
+    width: 18px;
+    height: 18px;
+
+    margin-right: 11px;
+
+    fill: none;
+
+    stroke: #88d8fa;
+
+    stroke-width: 2;
+
+    stroke-linecap: round;
+}
+
+.search-box input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+.search-box input::placeholder {
+    color: #82aec3;
+}
+
+
+/* ==================================================
+   SELECT
+================================================== */
+
+.filter {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.filter label {
+    color: #ffffff;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.filter select {
+    height: 46px;
+
+    padding: 0 12px;
+
+    background: #17384a;
+
+    border: 1px solid #5a7f92;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+.filter select:focus {
+    border-color: #32c9f2;
+}
+
+.filter select option {
+    background: #102a38;
+
+    color: #ffffff;
+}
+
+
+/* ==================================================
+   TABLA
+================================================== */
+
+.table-container {
+    width: 100%;
+
+    overflow-x: auto;
+
+    background: #0c2c3c;
+
+    border: 1px solid #3b6679;
+
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 13px;
+}
+
+thead {
+    background: #113547;
+}
+
+th {
+    padding: 12px 13px;
+
+    text-align: left;
+
+    color: #d7eef8;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    border-bottom: 1px solid #466d80;
+
+    white-space: nowrap;
+}
+
+td {
+    padding: 12px 13px;
+
+    color: #ffffff;
+
+    border-bottom: 1px solid #294d5f;
+
+    white-space: nowrap;
+}
+
+tbody tr {
+    transition: .18s;
+}
+
+tbody tr:hover {
+    background: rgba(31, 169, 221, .07);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ==================================================
+   PACIENTE
+================================================== */
+
+.patient {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: 1px solid #13d4f2;
+
+    border-radius: 50%;
+
+    background: rgba(15, 116, 151, .12);
+}
+
+.avatar svg {
+    width: 18px;
+    height: 18px;
+
+    fill: none;
+
+    stroke: #16d8f3;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.patient-name {
+    color: #ffffff;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   ESTADO
+================================================== */
+
+.status {
+    display: inline-block;
+
+    min-width: 100px;
+
+    padding: 6px 10px;
+
+    text-align: center;
+
+    border: 1px solid #13d9db;
+
+    border-radius: 24px;
+
+    background: rgba(15, 190, 188, .07);
+
+    color: #21ece2;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* ==================================================
+   ACCIONES
+================================================== */
+
+.actions {
+    display: flex;
+
+    gap: 7px;
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #4f7588;
+
+    border-radius: 7px;
+
+    background: #143848;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.action-btn svg {
+    width: 17px;
+    height: 17px;
+
+    fill: none;
+
+    stroke: #a9e9ff;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.action-btn:hover {
+    background:
+        linear-gradient(
+            90deg,
+            #30afe9,
+            #168bf1
+        );
+
+    border-color: #59ddff;
+
+    transform: translateY(-1px);
+}
+
+.action-btn:hover svg {
+    stroke: #ffffff;
+}
+
+
+/* ==================================================
+   PAGINACION
+================================================== */
+
+.pagination {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 7px;
+
+    margin-top: 18px;
+}
+
+.pagination button {
+    width: 36px;
+    height: 36px;
+
+    border: 1px solid #4d7488;
+
+    border-radius: 7px;
+
+    background: #123546;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.pagination button:hover {
+    border-color: #21d3f7;
+
+    background: #17475c;
+}
+
+.pagination .page-active {
+    background:
+        linear-gradient(
+            135deg,
+            #27b5ef,
+            #1387f3
+        );
+
+    border-color: #5be5ff;
+
+    color: #ffffff;
+}
+
+
+/* ==================================================
+   TABLA VACIA
+================================================== */
+
+.empty-table {
+    padding: 30px;
+
+    text-align: center;
+
+    color: #94b6c6;
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 1100px) {
+
+    .content-card {
+        margin: 20px;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    table {
+        min-width: 850px;
+    }
+
+}
+
+
+@media (max-width: 760px) {
+
+    .sidebar {
+        width: 70px;
+    }
+
+    .brand {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .brand span {
+        display: none;
+    }
+
+    .menu a {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .menu a.active {
+        padding: 0;
+
+        border-left: none;
+
+        border-bottom: 3px solid #16c8ef;
+    }
+
+    .menu-text {
+        display: none;
+    }
+
+    .content-card {
+        margin: 12px;
+
+        padding: 18px;
+    }
+
+    .page-header h1 {
+        font-size: 22px;
+    }
+
+    .page-header p {
+        font-size: 13px;
+    }
+
+}
+
+</style>
+
+{% endblock %}  
