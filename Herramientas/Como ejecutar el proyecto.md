@@ -66,6 +66,9 @@
 >> - Por ultimo para ejecutar el proyecto sera necesario de presentar instalado el Docker de Escritorio, lo importante
 >>   de este prgrama es que este corriendo en tu computador, ya que si no lo esta no se ejecutara el proyecto.
 >>
+>>   Antes de correr el comando deberas de modificar el nombre del archivo `.env-example` por `.env`, este archivo esta
+>>   en la carpeta `Aplicación`, una vez modificado deberas de correr el programa de Docker en tu equipo.
+>>
 >>   Una vez verificado de que el Docker de escritorio este corriendo tendras que ejecutar el siguiente comando:
 >> 
 >>   `docker compose up --build`
