@@ -1,2 +1,396 @@
-Pagina de Login
-(login.html)
+{% extends "base.html" %}
+
+{% block title %}Inicio de sesión{% endblock %}
+
+{% block content %}
+
+<main class="login-page">
+
+    <section class="login-card">
+
+        <!-- ==================================================
+             LOGO
+        =================================================== -->
+
+        <div class="brand">
+
+            <div class="brand-circle"></div>
+
+            <span>WellQ</span>
+
+        </div>
+
+        <h1 class="login-title">
+            Iniciar sesión
+        </h1>
+
+
+        <!-- ==================================================
+             FORMULARIO
+        =================================================== -->
+
+        <form method="post" class="login-form">
+
+            {% csrf_token %}
+
+            <!-- RUT -->
+
+            <div class="field">
+
+                <label for="rut">
+                    RUT
+                </label>
+
+                <input
+                    type="text"
+                    id="rut"
+                    name="rut"
+                    placeholder="11.111.111-1"
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <!-- CONTRASEÑA -->
+
+            <div class="field">
+
+                <label for="password">
+                    Contraseña
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="•••••••"
+                    autocomplete="current-password"
+                >
+
+            </div>
+
+
+            <!-- CONTINUAR -->
+
+            <button type="submit" class="btn btn-primary">
+                Continuar
+            </button>
+
+        </form>
+
+
+        <!-- ==================================================
+             SEPARADOR
+        =================================================== -->
+
+        <div class="separator">
+            <span>o</span>
+        </div>
+
+
+        <!-- CREAR CUENTA -->
+
+        <button type="button" class="btn btn-secondary">
+            Crear cuenta
+        </button>
+
+    </section>
+
+</main>
+
+
+<style>
+/* ==================================================
+   GENERAL
+================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            #173044 0%,
+            #0f1d29 36%,
+            #09131c 72%,
+            #070e15 100%
+        );
+    color: #ffffff;
+}
+
+
+/* ==================================================
+   ESTRUCTURA
+================================================== */
+
+.login-page {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px 16px;
+}
+
+
+/* ==================================================
+   TARJETA
+================================================== */
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+
+    padding: 34px 30px;
+
+    background: rgba(12, 38, 52, .94);
+
+    border: 1px solid #315a6e;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 12px 32px rgba(0,0,0,.18);
+}
+
+
+/* ==================================================
+   LOGO
+================================================== */
+
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    color: #ffffff;
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.brand-circle {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #33eee1,
+            #06b5db,
+            #1599eb
+        );
+
+    border: 1px solid #61f5ed;
+
+    box-shadow:
+        0 0 15px rgba(27, 215, 222, .27),
+        inset 0 0 7px rgba(255,255,255,.22);
+}
+
+
+/* ==================================================
+   TITULO
+================================================== */
+
+.login-title {
+    margin: 14px 0 26px;
+
+    text-align: center;
+
+    color: #9ec8de;
+
+    font-size: 17px;
+    font-weight: 400;
+}
+
+
+/* ==================================================
+   CAMPOS
+================================================== */
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.field label {
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.field input {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 13px;
+
+    background: #17384a;
+
+    border: 1px solid #5a7f92;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: .2s;
+}
+
+.field input::placeholder {
+    color: #82aec3;
+}
+
+.field input:focus {
+    border-color: #32c9f2;
+
+    box-shadow:
+        0 0 0 2px rgba(31, 190, 239, .08);
+}
+
+
+/* ==================================================
+   BOTONES
+================================================== */
+
+.btn {
+    width: 100%;
+    height: 46px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.btn-primary {
+    margin-top: 6px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #27b5ef,
+            #1387f3
+        );
+
+    border: 1px solid #5be5ff;
+
+    color: #ffffff;
+
+    font-weight: 700;
+}
+
+.btn-primary:hover {
+    box-shadow:
+        0 0 12px rgba(39, 181, 239, .35);
+
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #143848;
+
+    border: 1px solid #4f7588;
+
+    color: #eaf5fa;
+}
+
+.btn-secondary:hover {
+    background: #17475c;
+
+    border-color: #21d3f7;
+}
+
+.btn:focus-visible {
+    outline: 2px solid #41e4ff;
+    outline-offset: 2px;
+}
+
+
+/* ==================================================
+   SEPARADOR
+================================================== */
+
+.separator {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin: 22px 0;
+
+    color: #9ec8de;
+
+    font-size: 14px;
+}
+
+.separator::before,
+.separator::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #315a6e;
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 480px) {
+
+    .login-card {
+        padding: 26px 18px;
+    }
+
+    .brand {
+        font-size: 24px;
+    }
+
+    .brand-circle {
+        width: 42px;
+        height: 42px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
