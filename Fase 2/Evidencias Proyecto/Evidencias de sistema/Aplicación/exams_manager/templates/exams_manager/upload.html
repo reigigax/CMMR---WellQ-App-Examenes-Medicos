@@ -1,2 +1,785 @@
-Pagina de Subida de Examenes Medicos
-(upload.html)
+{% extends "base.html" %}
+
+{% block title %}
+Subir documentos | WellQ
+{% endblock %}
+
+{% block content %}
+
+<div class="upload-layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-circle"></div>
+            <span>WellQ</span>
+        </div>
+
+        <nav class="menu">
+
+            <a href="{% url 'home' %}">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 11.5L12 4l9 7.5"/>
+                        <path d="M5 10v10h14V10"/>
+                        <path d="M9 20v-6h6v6"/>
+                    </svg>
+                </span>
+                <span>Inicio</span>
+            </a>
+
+            <a href="{% url 'upload' %}" class="active">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2h9l5 5v15H6z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M12 18V10"/>
+                        <path d="M9 13l3-3 3 3"/>
+                    </svg>
+                </span>
+                <span>Subir documentos</span>
+            </a>
+
+            <a href="{% url 'paciente' %}">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2h9l5 5v15H6z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M9 13h8"/>
+                        <path d="M9 17h8"/>
+                    </svg>
+                </span>
+                <span>Mis archivos</span>
+            </a>
+
+            <a href="{% url 'clinico' %}">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="8" r="4"/>
+                        <path d="M2.5 20c0-4 2.8-7 6.5-7s6.5 3 6.5 7"/>
+                        <circle cx="17" cy="9" r="3"/>
+                        <path d="M16 14c3.3 0 5.5 2.4 5.5 6"/>
+                    </svg>
+                </span>
+                <span>Pacientes</span>
+            </a>
+
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div></div>
+            <div class="profile">
+                <div class="profile-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
+                    </svg>
+                </div>
+                <span>Usuario</span>
+            </div>
+        </header>
+
+        <section class="content-card">
+
+            <div class="page-header">
+                <div>
+                    <h1>Subir documentos</h1>
+                    <p>Seleccione los archivos médicos que desea cargar al sistema.</p>
+                </div>
+            </div>
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                {% csrf_token %}
+
+                <div class="drop-zone" id="dropZone">
+
+                    <div class="cloud-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 11a4 4 0 0 0 1 7z"/>
+                            <path d="M12 15V8"/>
+                            <path d="M9.5 10.5L12 8l2.5 2.5"/>
+                        </svg>
+                    </div>
+
+                    <h2>Arrastre y suelte sus documentos aquí</h2>
+                    <p>o haga clic para seleccionar archivos</p>
+
+                    <input
+                        type="file"
+                        id="fileInput"
+                        name="documentos"
+                        multiple
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        hidden
+                    >
+
+                    <button type="button" class="select-btn" id="selectFiles">
+                        Seleccionar archivos
+                    </button>
+
+                    <div class="file-info">
+                        Formatos permitidos: PDF, DOC, DOCX, JPG, JPEG, PNG
+                        <br>
+                        Tamaño máximo por archivo: 10 MB
+                    </div>
+
+                </div>
+
+                <div class="selected-section">
+
+                    <div class="section-title">
+                        <h2>Archivos seleccionados</h2>
+                        <span id="fileCount">0 archivos</span>
+                    </div>
+
+                    <div class="table-container">
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre del archivo</th>
+                                    <th>Tamaño</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="fileList">
+                                <tr id="emptyRow">
+                                    <td colspan="5" class="empty-table">
+                                        Aún no ha seleccionado archivos.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <div class="actions-footer">
+                    <button type="button" class="btn-secondary" id="clearFiles">
+                        Limpiar
+                    </button>
+
+                    <button type="submit" class="btn-primary" id="uploadFiles" disabled>
+                        Subir documentos
+                    </button>
+                </div>
+
+            </form>
+
+            {% if documentos %}
+            <div class="recent-section">
+                <div class="section-title">
+                    <h2>Últimos documentos cargados</h2>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Archivo</th>
+                                <th>Tipo</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for documento in documentos %}
+                            <tr>
+                                <td>{{ documento.nombre_original }}</td>
+                                <td>{{ documento.tipo }}</td>
+                                <td>{{ documento.fecha_subida|date:"d-m-Y H:i" }}</td>
+                                <td>
+                                    <span class="status">{{ documento.get_estado_display }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+        </section>
+
+    </main>
+</div>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 50% 20%, #173044 0%, #0f1d29 36%, #09131c 72%, #070e15 100%);
+    color: #ffffff;
+}
+
+.upload-layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: #071722;
+    border-right: 1px solid #315064;
+    flex-shrink: 0;
+}
+
+.brand {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 18px;
+    border-bottom: 1px solid #315064;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.brand-circle {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #33eee1, #06b5db, #1599eb);
+    border: 1px solid #61f5ed;
+    box-shadow: 0 0 15px rgba(27,215,222,.27), inset 0 0 7px rgba(255,255,255,.22);
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    padding: 18px 7px;
+}
+
+.menu a {
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 17px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    color: #eaf5fa;
+    text-decoration: none;
+    font-size: 14px;
+    transition: .2s ease;
+}
+
+.menu a:hover {
+    background: rgba(18,150,211,.10);
+}
+
+.menu a.active {
+    background: linear-gradient(90deg, #093149, #092638);
+    border-left: 3px solid #16c8ef;
+    padding-left: 14px;
+    font-weight: 700;
+}
+
+.menu-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.menu-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #16d0f3;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    height: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    background: #071722;
+    border-bottom: 1px solid #315064;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #16d8f3;
+    border-radius: 50%;
+    background: rgba(13,75,98,.18);
+}
+
+.profile-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #19d7f3;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.content-card {
+    max-width: 1180px;
+    margin: 24px auto;
+    padding: 28px;
+    background: rgba(12,38,52,.94);
+    border: 1px solid #315a6e;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,.18);
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.page-header p {
+    margin: 7px 0 0;
+    color: #9ec8de;
+    font-size: 14px;
+}
+
+.messages {
+    margin-top: 18px;
+}
+
+.message {
+    padding: 12px 14px;
+    border: 1px solid #315a6e;
+    border-radius: 8px;
+    background: #102f40;
+    color: #dff8ff;
+    font-size: 13px;
+}
+
+.message.error {
+    border-color: #8c5360;
+    background: #3b2028;
+}
+
+.message.success {
+    border-color: #2d786c;
+    background: #143b38;
+}
+
+.drop-zone {
+    margin-top: 25px;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    text-align: center;
+    border: 2px dashed #3f7893;
+    border-radius: 12px;
+    background: rgba(8,32,44,.65);
+    transition: .2s ease;
+}
+
+.drop-zone.dragging {
+    border-color: #18d5f4;
+    background: rgba(16,104,137,.18);
+    transform: scale(1.005);
+}
+
+.cloud-icon {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 10px;
+}
+
+.cloud-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: #18c9f0;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.drop-zone h2 {
+    margin: 2px 0 5px;
+    font-size: 18px;
+}
+
+.drop-zone > p {
+    margin: 0 0 15px;
+    color: #9fc8dc;
+    font-size: 13px;
+}
+
+.select-btn {
+    border: 1px solid #5ae0ff;
+    border-radius: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #28afe9, #1589ef);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.file-info {
+    margin-top: 15px;
+    color: #7faec2;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.selected-section,
+.recent-section {
+    margin-top: 28px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.section-title h2 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.section-title span {
+    color: #83b6ca;
+    font-size: 12px;
+}
+
+.table-container {
+    overflow-x: auto;
+    background: #0c2c3c;
+    border: 1px solid #315a6e;
+    border-radius: 9px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 13px 14px;
+    text-align: left;
+    background: #102f40;
+    border-bottom: 1px solid #315a6e;
+    color: #9fc8dc;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #24495d;
+    font-size: 13px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.empty-table {
+    padding: 30px;
+    text-align: center;
+    color: #7faec2;
+}
+
+.file-name {
+    font-weight: 600;
+}
+
+.file-size {
+    color: #9fc8dc;
+}
+
+.file-type {
+    color: #9fc8dc;
+    font-size: 12px;
+}
+
+.status {
+    display: inline-flex;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: rgba(31,184,220,.12);
+    border: 1px solid #277a91;
+    color: #73d9f0;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.remove-btn {
+    border: 0;
+    background: transparent;
+    color: #8db8c8;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.remove-btn:hover {
+    color: #ffffff;
+}
+
+.actions-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-secondary,
+.btn-primary {
+    min-height: 42px;
+    padding: 0 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #d7edf5;
+    border: 1px solid #557688;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #28afe9, #1589ef);
+    color: white;
+    border: 1px solid #5ae0ff;
+}
+
+.btn-primary:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+@media (max-width: 850px) {
+    .sidebar {
+        width: 72px;
+    }
+
+    .brand span,
+    .menu a span:last-child {
+        display: none;
+    }
+
+    .menu a {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .menu a.active {
+        padding-left: 0;
+    }
+
+    .content-card {
+        margin: 15px;
+        padding: 20px;
+    }
+}
+</style>
+
+<script>
+const fileInput = document.getElementById("fileInput");
+const selectFiles = document.getElementById("selectFiles");
+const dropZone = document.getElementById("dropZone");
+const fileList = document.getElementById("fileList");
+const emptyRow = document.getElementById("emptyRow");
+const clearFiles = document.getElementById("clearFiles");
+const uploadFiles = document.getElementById("uploadFiles");
+const fileCount = document.getElementById("fileCount");
+
+const MAX_SIZE = 10 * 1024 * 1024;
+const ALLOWED = ["pdf", "doc", "docx", "jpg", "jpeg", "png"];
+
+let selectedFiles = [];
+
+selectFiles.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", () => {
+    addFiles(fileInput.files);
+    fileInput.value = "";
+});
+
+["dragenter", "dragover"].forEach(eventName => {
+    dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        dropZone.classList.add("dragging");
+    });
+});
+
+["dragleave", "drop"].forEach(eventName => {
+    dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        dropZone.classList.remove("dragging");
+    });
+});
+
+dropZone.addEventListener("drop", event => {
+    addFiles(event.dataTransfer.files);
+});
+
+function addFiles(files) {
+    for (const file of files) {
+        const extension = file.name.split(".").pop().toLowerCase();
+
+        if (!ALLOWED.includes(extension)) {
+            alert(`"${file.name}" no tiene un formato permitido.`);
+            continue;
+        }
+
+        if (file.size > MAX_SIZE) {
+            alert(`"${file.name}" supera el tamaño máximo de 10 MB.`);
+            continue;
+        }
+
+        const duplicate = selectedFiles.some(
+            item => item.name === file.name && item.size === file.size
+        );
+
+        if (!duplicate) {
+            selectedFiles.push(file);
+        }
+    }
+
+    renderFiles();
+}
+
+function formatSize(bytes) {
+    if (bytes < 1024 * 1024) {
+        return `${(bytes / 1024).toFixed(1)} KB`;
+    }
+
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function renderFiles() {
+    fileList.innerHTML = "";
+
+    if (selectedFiles.length === 0) {
+        fileList.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty-table">
+                    Aún no ha seleccionado archivos.
+                </td>
+            </tr>
+        `;
+        uploadFiles.disabled = true;
+        fileCount.textContent = "0 archivos";
+        return;
+    }
+
+    selectedFiles.forEach((file, index) => {
+        const extension = file.name.split(".").pop().toUpperCase();
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td class="file-name">${escapeHtml(file.name)}</td>
+            <td class="file-size">${formatSize(file.size)}</td>
+            <td class="file-type">${extension}</td>
+            <td><span class="status">Listo para subir</span></td>
+            <td>
+                <button type="button" class="remove-btn" title="Eliminar" data-index="${index}">
+                    ×
+                </button>
+            </td>
+        `;
+
+        fileList.appendChild(row);
+    });
+
+    document.querySelectorAll(".remove-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            selectedFiles.splice(Number(button.dataset.index), 1);
+            renderFiles();
+        });
+    });
+
+    uploadFiles.disabled = false;
+    fileCount.textContent =
+        selectedFiles.length === 1
+            ? "1 archivo"
+            : `${selectedFiles.length} archivos`;
+}
+
+clearFiles.addEventListener("click", () => {
+    selectedFiles = [];
+    renderFiles();
+});
+
+document.getElementById("uploadForm").addEventListener("submit", event => {
+    if (selectedFiles.length === 0) {
+        event.preventDefault();
+        return;
+    }
+
+    const dataTransfer = new DataTransfer();
+
+    selectedFiles.forEach(file => dataTransfer.items.add(file));
+
+    fileInput.files = dataTransfer.files;
+});
+
+function escapeHtml(value) {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+</script>
+
+{% endblock %}
