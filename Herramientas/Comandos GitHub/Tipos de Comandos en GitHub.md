@@ -88,7 +88,7 @@
 >> - **`git checkout main`** *(este comando se realizaria solo en el caso de que no estubieramos en la rama main)*
 >> - **`git merge parche_01`** *(una vez en la rama principal "main" aplicamos este comando el cual traera los cambios trabajados en la rama "parche_01" y los aplicara localmente a la rama principal "main" en la cual nos encontramos, para que se apliquen al repositorio es necesario de realizar un `git push -u origin main`)*
 
-#### 15.- ***git pull {nombre de la rama}***
+#### 15.- ***git pull origin {nombre de la rama}***
 > Este comando realiza las funciones de los comandos previos `git fetch` y `git merge`, lo que basicamente termina trayendo los ultimos cambios realizados en la rama y aplicandolos localmente
 
 
