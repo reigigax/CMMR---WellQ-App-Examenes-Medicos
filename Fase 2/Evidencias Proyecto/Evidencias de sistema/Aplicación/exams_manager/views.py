@@ -8,10 +8,13 @@ def base(request):
 
 # Pagina de Login
 def login(request):
+
+    
     return render(request, 'exams_manager/login.html')
 
 # Pagina de Registro
 def sign_up(request):
+    
     return render(request, 'exams_manager/sign_up.html')
 
 # Pagina de Subida de Examenes Medicos
@@ -51,4 +54,65 @@ def clinico(request):
         request,
         "exams_manager/clinico.html",
         {"documentos": documentos},
+    )
+
+def paciente(request):
+
+    documentos = [
+        {
+            "nombre": "recetamedica.pdf",
+            "tipo": "Receta Medica",
+            "fecha": "01-01-2025",
+            "estado": "Vigente",
+        },
+        {
+            "nombre": "licenciamedica.docx",
+            "tipo": "Licencia Medica",
+            "fecha": "01-01-2025",
+            "estado": "En Revisión",
+        },
+        {
+            "nombre": "licenciamedica.docx",
+            "tipo": "Imagenologia",
+            "fecha": "01-01-2025",
+            "estado": "Vigente",
+        },
+        {
+            "nombre": "recetamedica.pdf",
+            "tipo": "Receta Medica",
+            "fecha": "01-01-2025",
+            "estado": "En Revisión",
+        },
+        {
+            "nombre": "recetamedica.pdf",
+            "tipo": "Receta Medica",
+            "fecha": "01-01-2025",
+            "estado": "Vigente",
+        },
+        {
+            "nombre": "licenciamedica.docx",
+            "tipo": "Licencia Medica",
+            "fecha": "01-01-2025",
+            "estado": "Vigente",
+        },
+        {
+            "nombre": "recetamedica.pdf",
+            "tipo": "Receta Medica",
+            "fecha": "01-01-2025",
+            "estado": "Vigente",
+        },
+        {
+            "nombre": "licenciamedica.docx",
+            "tipo": "Licencia Medica",
+            "fecha": "01-01-2025",
+            "estado": "Expirada",
+        },
+    ]
+
+    return render(
+        request,
+        "exams_manager/paciente.html",
+        {
+            "documentos": documentos
+        }
     )
