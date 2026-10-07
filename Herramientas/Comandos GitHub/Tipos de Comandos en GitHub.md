@@ -35,7 +35,7 @@
 > Este comando nos permite quitar de la confirmacion un archivo seleccionado previamente. *(nos sirve para quitar algun archivo que no queremos subir porque esta incompleto o no es relevante)* 
 
 #### 6.- ***git remote add origin {link del repositorio}***
-> Este comando nos permite definir a que repositorio estaremos mandando los archivos o cambios realizados.
+> Este comando nos permite definir a que repositorio al que estaremos mandando los archivos o cambios realizados.
 >
 > Ejemplo de nuestro caso:
 >> - **`git remote add origin https://github.com/reigigax/CMMR---WellQ-App-Examenes-Medicos`**
@@ -78,7 +78,7 @@
 ---
 
 #### 13.- ***git fetch {nombre de la rama}***
-> Este comando trae todas las modificaciones realizadas a la rama llamada, sin embargo estos datos que trae este comando no modificar tu código ni las ramas locales actuales *(este comando nos sirve para traer modificaciones realizadas desde otras remas sin interrumpir nuestra area de trabajo)*
+> Este comando trae todas las modificaciones realizadas a la rama llamada, sin embargo estos datos que trae este comando no modificar tu código ni las ramas locales actuales *(este comando nos sirve para traer modificaciones realizadas desde otras ramas sin interrumpir nuestra area de trabajo)*
 
 #### 14.- ***git merge {nombre de la rama}***
 > Este comando nos permite combinar cambios entre ramas, para realizar esto es necesario irse o estar en la rama la cual le queremos `aplicar los cambios`, *esto se puede realizar con el comando `git checkout`*, luego debemos indicar el nombre de la rama donde se presentan los cambios para asi aplicarlos a la rama correspondiente. *(este comando es importante manejarlo con cuidado ya que este es el que definira si se van a la rama principal los cambios o añadidos realizados)*
