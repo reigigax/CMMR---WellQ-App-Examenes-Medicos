@@ -35,11 +35,11 @@
 > 3. git commit -m "{ mensaje de lo realizado o modificado }"
 
 
-#### - Subir archivos o cambios al repositorio principal -
+#### - Subir archivos o cambios a otra rama -
 > 1. git init
 > 2. git add .
 > 3. git commit -m "{ mensaje de lo realizado o modificado }"
-> 4. git push -u origin main
+> 4. git push -u origin { nombre de la rama }
 
 
 #### - Subir archivos o cambios al repositorio principal -
@@ -73,4 +73,4 @@
 ##### Esto lo que hace es traer los cambios de la rama que mencionas en el comando a tu rama actual
 > ***Un ejemplo: si te encuentras el una rama llamada 'login_01' y necesitas traer cambios realizados en la rama principal del proyecto***
 > ***tendras que escribir el comando de la siguiente manera ***`git pull main`*** esto traera los cambios hechos en la rama main a la rama login_01***
->> 1. git pull { nombre de la rama }
+>> 1. git pull origin { nombre de la rama }
