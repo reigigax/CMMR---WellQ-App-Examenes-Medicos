@@ -27,11 +27,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Applicaciones de Django (exams_manager)
+    # Applicaciones de Django (front y api)
     'exams_manager',
+    'exams_manager_api',
 
     # Frameworks instalados
-    'rest_framework',
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
