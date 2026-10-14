@@ -268,6 +268,100 @@ body {
 
 
 /* ==================================================
+   INPUT CON ÍCONOS (candado y mostrar contraseña)
+================================================== */
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon input {
+    padding-left: 40px;
+    padding-right: 44px;
+}
+
+/* Edge agrega su propio botón de ojo; se oculta para no duplicarlo */
+.input-icon input::-ms-reveal {
+    display: none;
+}
+
+.input-icon svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.icon-lock {
+    position: absolute;
+    top: 50%;
+    left: 13px;
+
+    width: 18px;
+    height: 18px;
+
+    transform: translateY(-50%);
+
+    color: #82aec3;
+
+    pointer-events: none;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    transform: translateY(-50%);
+
+    background: none;
+
+    border: 0;
+    border-radius: 6px;
+
+    color: #82aec3;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.toggle-password:hover {
+    color: #32c9f2;
+}
+
+.toggle-password:focus-visible {
+    outline: 2px solid #41e4ff;
+    outline-offset: 1px;
+}
+
+.toggle-password svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Ojo tachado solo cuando la contraseña está visible */
+.toggle-password .icon-eye-off,
+.toggle-password.is-visible .icon-eye {
+    display: none;
+}
+
+.toggle-password.is-visible .icon-eye-off {
+    display: block;
+}
+
+
+/* ==================================================
    RESPONSIVE
 ================================================== */
 

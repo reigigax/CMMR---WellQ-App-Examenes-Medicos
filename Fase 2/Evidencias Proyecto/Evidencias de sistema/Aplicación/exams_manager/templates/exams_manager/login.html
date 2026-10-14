@@ -68,13 +68,35 @@
                     Contraseña
                 </label>
 
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="•••••••"
-                    autocomplete="current-password"
-                >
+                <div class="input-icon">
+
+                    <svg class="icon-lock" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="5" y="11" width="14" height="10" rx="2"/>
+                        <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+                    </svg>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="•••••••"
+                        autocomplete="current-password"
+                    >
+
+                    <button type="button" class="toggle-password" aria-controls="password" aria-label="Mostrar contraseña">
+                        <svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <svg class="icon-eye-off" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M10.6 5.1A9.7 9.7 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-2.4 3.3"/>
+                            <path d="M6.6 6.6C3.7 8.4 2 12 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/>
+                            <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+                            <path d="M3 3l18 18"/>
+                        </svg>
+                    </button>
+
+                </div>
 
             </div>
 
@@ -118,5 +140,12 @@
     </section>
 
 </main>
+
+<script src="{% static 'js/rut.js' %}"></script>
+<script src="{% static 'js/password.js' %}"></script>
+<script>
+    aplicarFormatoRut(document.getElementById("rut"));
+    document.querySelectorAll(".toggle-password").forEach(aplicarMostrarPassword);
+</script>
 
 {% endblock %}
