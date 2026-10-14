@@ -67,8 +67,22 @@ WSGI_APPLICATION = 'wellq.wsgi.application'
 # Configuración de la base de datos conectada al contenedor Docker
 DATABASES = {
     'default': {
+        # IMPORTANTE: Si no desean correr el proyecto con docker deben
+        #             de quitar de comentarios (quitar el '#') en la 
+        #             base de datos de Django y poner en comentarios 
+        #             (el '#' al inicio) a la base de datos de Postgres
+
+        # BASE DE DATOS DE -DJANGO-
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        
+        # BASE DE DATOS DE -POSTGRES-
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': os.environ['POSTGRES_DB'],
+        # 'USER': os.environ['POSTGRES_USER'],
+        # 'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        # 'HOST': os.environ['POSTGRES_HOST'],
+        # 'PORT': os.environ['POSTGRES_PORT'],
     }
 }
 
