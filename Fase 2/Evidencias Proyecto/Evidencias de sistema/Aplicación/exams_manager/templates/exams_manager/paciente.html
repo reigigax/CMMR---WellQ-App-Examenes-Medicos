@@ -31,10 +31,22 @@ WellQ | Panel Paciente
                         <path d="M9 20v-6h6v6"/>
                     </svg>
                 </span>
-                <span class="menu-text">Inicio</span>
+                <span>Inicio</span>
             </a>
 
-            <a href="{% url 'paciente' %}" class="active">
+            <a href="{% url 'upload' %}" class="active">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2h9l5 5v15H6z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M12 18V10"/>
+                        <path d="M9 13l3-3 3 3"/>
+                    </svg>
+                </span>
+                <span>Subir documentos</span>
+            </a>
+
+            <a href="{% url 'paciente' %}">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M6 2h9l5 5v15H6z"/>
@@ -43,9 +55,25 @@ WellQ | Panel Paciente
                         <path d="M9 17h8"/>
                     </svg>
                 </span>
-                <span class="menu-text">Mis Documentos</span>
+                <span>Mis archivos</span>
             </a>
+            
+            {% if user_type == 'clinico' %}
+            <a href="{% url 'clinico' %}">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="8" r="4"/>
+                        <path d="M2.5 20c0-4 2.8-7 6.5-7s6.5 3 6.5 7"/>
+                        <circle cx="17" cy="9" r="3"/>
+                        <path d="M16 14c3.3 0 5.5 2.4 5.5 6"/>
+                    </svg>
+                </span>
+                <span>Pacientes</span>
+            </a>
+            {% endif %}
+            
 
+            <!-- CERRAR SESIÓN -->
             <a href="{% url 'logout' %}">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
@@ -56,7 +84,6 @@ WellQ | Panel Paciente
             </a>
 
         </nav>
-
     </aside>
 
     <main class="main-content">

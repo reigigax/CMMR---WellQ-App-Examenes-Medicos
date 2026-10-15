@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-WellQ | Subir documentos
+WellQ | Subir Documentos
 {% endblock %}
 
 {% block content %}
@@ -58,7 +58,7 @@ WellQ | Subir documentos
                 <span>Mis archivos</span>
             </a>
             
-            {% if user_type == 'Clinico' %}
+            {% if user_type == 'clinico' %}
             <a href="{% url 'clinico' %}">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
@@ -71,6 +71,18 @@ WellQ | Subir documentos
                 <span>Pacientes</span>
             </a>
             {% endif %}
+            
+
+            <!-- CERRAR SESIÓN -->
+            <a href="{% url 'logout' %}">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                </span>
+                <span class="menu-text">Cerrar Sesión</span>
+            </a>
+
         </nav>
     </aside>
 
