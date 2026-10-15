@@ -31,7 +31,7 @@ WellQ | Subir documentos
                         <path d="M9 20v-6h6v6"/>
                     </svg>
                 </span>
-                <span>Inicio{{ user_type }}</span>
+                <span>Inicio</span>
             </a>
 
             <a href="{% url 'upload' %}" class="active">
@@ -57,7 +57,8 @@ WellQ | Subir documentos
                 </span>
                 <span>Mis archivos</span>
             </a>
-
+            
+            {% if user_type == 'Clinico' %}
             <a href="{% url 'clinico' %}">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
@@ -69,7 +70,7 @@ WellQ | Subir documentos
                 </span>
                 <span>Pacientes</span>
             </a>
-
+            {% endif %}
         </nav>
     </aside>
 

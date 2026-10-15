@@ -241,6 +241,7 @@ def upload(request):
     context = {
         "nombre_completo": request.session.get('nombre_completo', 'Usuario'),
         "rut": request.session.get('rut', ''),
+        "user_type": request.session.get('user_type'),
         "documentos": documentos
     }
 
