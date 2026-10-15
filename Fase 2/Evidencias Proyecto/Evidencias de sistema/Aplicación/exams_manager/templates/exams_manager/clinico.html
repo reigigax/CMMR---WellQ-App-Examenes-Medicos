@@ -202,8 +202,6 @@ WellQ | Panel Clínico
                         </tr>
 
                     </thead>
-
-
                     <tbody>
 
                         {% for documento in documentos %}
@@ -225,7 +223,7 @@ WellQ | Panel Clínico
                                         {% elif documento.paciente.nombres %}
                                             {{ documento.paciente.nombres }} {{ documento.paciente.apellidos }}
                                         {% else %}
-                                            {{ documento.paciente|default:"Paciente" }}
+                                            {{ documento.paciente|default:"Sin Paciente Asignado" }}
                                         {% endif %}
                                     </span>
                                 </div>
@@ -242,24 +240,24 @@ WellQ | Panel Clínico
                                 {% endif %}
                             </td>
 
-                            <!-- DOCUMENTO -->
+                            <!-- TÍTULO DEL DOCUMENTO -->
                             <td>
-                                {{ documento.titulo|default:documento.tipo }}
+                                {{ documento.titulo|default:"Sin Título" }}
                             </td>
 
-                            <!-- FECHA -->
+                            <!-- FECHA DE EMISIÓN -->
                             <td>
-                                {{ documento.fecha_subido|default:documento.fecha }}
+                                {{ documento.fecha_subido }}
                             </td>
 
-                            <!-- ESTADO -->
+                            <!-- ESTADO / SESIÓN -->
                             <td>
                                 <span class="status">
-                                    {{ documento.sesion|default:documento.estado|default:"Disponible" }}
+                                    {{ documento.sesion|default:"Disponible" }}
                                 </span>
                             </td>
 
-                            <!-- ACCIONES -->
+                            <!-- ACCIONES DE LA TABLA -->
                             <td>
                                 <div class="actions">
                                     {% if documento.archivo %}
@@ -279,12 +277,23 @@ WellQ | Panel Clínico
                                                 <path d="M5 21h14"/>
                                             </svg>
                                         </a>
-                                    {% else %}
-                                        <span style="font-size: 0.85rem; color: #82aec3;">Sin archivo</span>
                                     {% endif %}
-                                </div>
-                            </td>
 
+                                    <!-- BOTÓN ELIMINAR (A LA DERECHA CON CONFIRMACIÓN PREVIA) -->
+                                    <form method="POST" action="{% url 'eliminar_examen' documento.id %}" style="display: inline;" onsubmit="return confirm('¿Está seguro de que desea eliminar este documento? Esta acción no se puede deshacer.');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-btn danger" title="Eliminar documento">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M4 7h16"/>
+                                                <path d="M9 7V4h6v3"/>
+                                                <path d="M7 7l1 14h8l1-14"/>
+                                                <path d="M10 11v6"/>
+                                                <path d="M14 11v6"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                        </td>
                         </tr>
 
                         {% empty %}

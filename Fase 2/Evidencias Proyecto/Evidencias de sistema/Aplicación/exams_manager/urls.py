@@ -12,4 +12,5 @@ urlpatterns = [
     path('sign_up/', views.sign_up, name='sign_up'),
     path('upload/', views.upload, name='upload'),
     path('paciente/', views.paciente, name='paciente'),
+    path('examenes/eliminar/<int:examen_id>/', views.eliminar_examen, name='eliminar_examen'),
 ]

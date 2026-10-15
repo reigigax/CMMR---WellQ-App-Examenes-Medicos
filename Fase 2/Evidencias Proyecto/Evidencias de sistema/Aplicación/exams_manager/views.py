@@ -277,3 +277,17 @@ def paciente(request):
     }
 
     return render(request, "exams_manager/paciente.html", context)
+
+@jwt_required
+def eliminar_examen(request, examen_id):
+    """Envía una petición DELETE a la API para eliminar un examen por su ID."""
+    if request.method == 'POST':
+        response = api_request(request, 'DELETE', f'/examenes/{examen_id}/')
+
+        if response and response.status_code in [200, 204]:
+            messages.success(request, "El documento ha sido eliminado exitosamente.")
+        else:
+            messages.error(request, "No se pudo eliminar el documento. Intente nuevamente.")
+
+    # Redirige de vuelta a la página desde donde se solicitó la eliminación
+    return redirect(request.META.get('HTTP_REFERER', 'clinico'))
