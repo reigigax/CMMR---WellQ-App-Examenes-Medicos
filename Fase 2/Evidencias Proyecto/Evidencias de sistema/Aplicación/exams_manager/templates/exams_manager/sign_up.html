@@ -64,8 +64,6 @@
         display: none;
     }
 
-    /* Tres segmentos: Débil pinta 1, Regular 2 y Buena 3 */
-
     .strength-segments {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -111,8 +109,6 @@
     .password-strength.buena .strength-text {
         color: #4fe3ae;
     }
-
-    /* Lista de requisitos: verde si se cumple, rojo si no */
 
     .password-rules {
         display: flex;
@@ -239,48 +235,32 @@
 
 
     /* ==================================================
-       MENSAJE DE ÉXITO
+       MENSAJE DE ALERTA DE DJANGO
     ================================================== */
 
-    .signup-success {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .messages-container {
+        margin-bottom: 15px;
+    }
 
-        gap: 8px;
-
-        margin: 0;
+    .alert-msg {
         padding: 10px 14px;
-
-        background: rgba(46, 211, 154, .12);
-
-        border: 1px solid rgba(79, 227, 174, .45);
-
         border-radius: 8px;
-
-        color: #4fe3ae;
-
-        font-size: 14px;
-        font-weight: 700;
-
+        font-size: 13px;
+        font-weight: 600;
         text-align: center;
+        margin-bottom: 8px;
     }
 
-    .signup-success[hidden] {
-        display: none;
+    .alert-msg.error {
+        background: rgba(255, 107, 107, 0.15);
+        border: 1px solid rgba(255, 107, 107, 0.45);
+        color: #ff8a8a;
     }
 
-    .signup-success svg {
-        flex-shrink: 0;
-
-        width: 18px;
-        height: 18px;
-
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2.2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+    .alert-msg.success {
+        background: rgba(46, 211, 154, .12);
+        border: 1px solid rgba(79, 227, 174, .45);
+        color: #4fe3ae;
     }
 
 
@@ -351,30 +331,37 @@
 
     <section class="login-card signup-card">
 
-        <!-- ==================================================
-             LOGO
-        =================================================== -->
+        <!-- LOGO -->
 
         <div class="brand signup-brand">
-
             <div class="brand-circle"></div>
-
             <span>WellQ</span>
-
         </div>
 
         <h1 class="login-title">
             Crear cuenta nueva
         </h1>
 
+        <!-- BLOQUE DE ERRORES / MENSAJES DE DJANGO -->
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert-msg {% if message.tags %}{{ message.tags }}{% else %}error{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-        <!-- ==================================================
-             FORMULARIO
-        =================================================== -->
 
-        <form method="post" class="signup-form">
+        <!-- FORMULARIO CONECTADO A VISTA DJANGO -->
+
+        <form method="POST" action="{% url 'sign_up' %}" class="signup-form">
 
             {% csrf_token %}
+
+            <!-- Campo oculto para dirección por defecto -->
+            <input type="hidden" name="direccion_id" value="1">
 
             <div class="signup-grid">
 
@@ -393,6 +380,7 @@
                         placeholder="Juan Carlos Pérez Campos"
                         autocomplete="name"
                         aria-describedby="error-nombre_completo"
+                        required
                     >
 
                     <p class="field-error" id="error-nombre_completo" hidden>
@@ -418,6 +406,7 @@
                         placeholder="ejemplo@gmail.com"
                         autocomplete="email"
                         aria-describedby="error-email"
+                        required
                     >
 
                     <p class="field-error" id="error-email" hidden>
@@ -443,6 +432,7 @@
                         placeholder="11.111.111-1"
                         autocomplete="username"
                         aria-describedby="error-rut"
+                        required
                     >
 
                     <p class="field-error" id="error-rut" hidden>
@@ -468,6 +458,7 @@
                         placeholder="9 1234 5678"
                         autocomplete="tel"
                         aria-describedby="error-celular"
+                        required
                     >
 
                     <p class="field-error" id="error-celular" hidden>
@@ -484,7 +475,6 @@
 
                     <label for="password">
                         Contraseña
-                        
                     </label>
 
                     <div class="input-icon">
@@ -501,6 +491,7 @@
                             placeholder="•••••••"
                             autocomplete="new-password"
                             aria-describedby="error-password"
+                            required
                         >
 
                         <button type="button" class="toggle-password" aria-controls="password" aria-label="Mostrar contraseña">
@@ -523,7 +514,7 @@
                         <span class="error-text"></span>
                     </p>
 
-                    <!-- Indicador de seguridad (oculto si el campo está vacío) -->
+                    <!-- Indicador de seguridad -->
 
                     <div class="password-strength" id="password-strength" hidden>
 
@@ -590,6 +581,7 @@
                             placeholder="•••••••"
                             autocomplete="new-password"
                             aria-describedby="password-match error-password_confirm"
+                            required
                         >
 
                         <button type="button" class="toggle-password" aria-controls="password_confirm" aria-label="Mostrar contraseña">
@@ -612,7 +604,7 @@
                         <span class="error-text"></span>
                     </p>
 
-                    <!-- Coinciden / no coinciden (oculto si el campo está vacío) -->
+                    <!-- Coinciden / no coinciden -->
 
                     <p class="password-match" id="password-match" hidden aria-live="polite">
                         <svg class="icon-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
@@ -625,7 +617,7 @@
             </div>
 
 
-            <!-- REGISTRAR (cambiar a type="submit" cuando exista la lógica) -->
+            <!-- BOTÓN REGISTRAR -->
 
             <div class="signup-actions">
 
@@ -635,19 +627,10 @@
 
             </div>
 
-            <!-- Mensaje de éxito de la simulación (se oculta solo a los 4 segundos) -->
-
-            <p class="signup-success" id="signup-success" role="status" hidden>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
-                Usuario registrado correctamente
-            </p>
-
         </form>
 
 
-        <!-- ==================================================
-             INICIAR SESIÓN
-        =================================================== -->
+        <!-- INICIAR SESIÓN -->
 
         <p class="signup-footer">
             ¿Ya tienes cuenta?
@@ -662,49 +645,32 @@
 <script src="{% static 'js/password.js' %}"></script>
 
 <script>
-    // ==================================================
-    // FORMATO DEL RUT (código común en static/js/rut.js)
-    // ==================================================
-
+    // FORMATO DEL RUT
     aplicarFormatoRut(document.getElementById("rut"));
 
-
-    // ==================================================
-    // MOSTRAR / OCULTAR CONTRASEÑA (static/js/password.js)
-    // ==================================================
-
+    // MOSTRAR / OCULTAR CONTRASEÑA
     document.querySelectorAll(".toggle-password").forEach(aplicarMostrarPassword);
 
-
-    // ==================================================
-    // NOMBRE COMPLETO: solo letras, espacios, ' y -
-    // ==================================================
-
+    // NOMBRE COMPLETO
     (function () {
-
         const inputNombre = document.getElementById("nombre_completo");
 
-        if (!inputNombre) {
-            return;
-        }
+        if (!inputNombre) return;
 
         function limpiarNombre(valor) {
             return valor
-                .replace(/’/g, "'")                             // apóstrofo tipográfico -> '
-                .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü'\- ]/g, "")    // letras, tildes, ñ, ü, ', - y espacio
-                .replace(/ {2,}/g, " ")                         // sin dos espacios seguidos
-                .replace(/^ /, "");                             // sin espacio al inicio
+                .replace(/’/g, "'")
+                .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü'\- ]/g, "")
+                .replace(/ {2,}/g, " ")
+                .replace(/^ /, "");
         }
 
         function filtrarNombre() {
             const valor = inputNombre.value;
             const limpio = limpiarNombre(valor);
 
-            if (limpio === valor) {
-                return;
-            }
+            if (limpio === valor) return;
 
-            // Mantiene el cursor en el mismo lugar del texto limpio
             const cursor = limpiarNombre(valor.slice(0, inputNombre.selectionStart)).length;
 
             inputNombre.value = limpio;
@@ -712,86 +678,58 @@
         }
 
         inputNombre.addEventListener("input", function (evento) {
-            // Mientras se compone una tilde (tecla muerta) no se filtra
-            if (evento.isComposing) {
-                return;
-            }
-
+            if (evento.isComposing) return;
             filtrarNombre();
         });
 
         inputNombre.addEventListener("compositionend", filtrarNombre);
-
     })();
 
 
-    // ==================================================
-    // CELULAR: solo 9 dígitos y el primero debe ser 9
-    // ==================================================
-
+    // CELULAR
     (function () {
-
         const inputCelular = document.getElementById("celular");
 
-        if (!inputCelular) {
-            return;
-        }
+        if (!inputCelular) return;
 
-        // Deja solo dígitos; un +56 9 XXXX XXXX pegado o autocompletado queda en 9 dígitos
         function soloDigitos(valor) {
             const digitos = valor.replace(/\D/g, "");
-
             return /^569\d{8}$/.test(digitos) ? digitos.slice(2) : digitos;
         }
 
         let anterior = soloDigitos(inputCelular.value).slice(0, 9);
 
         inputCelular.addEventListener("input", function (evento) {
-
             const valor = inputCelular.value;
             const cursor = inputCelular.selectionStart;
             const digitos = soloDigitos(valor);
             const esInsercion = Boolean(evento.inputType) && evento.inputType.startsWith("insert");
 
-            // Al escribir o pegar no se acepta un primer dígito distinto de 9
-            // (si al borrar quedó otro dígito al inicio, se deja y lo marca Registrar)
             const primeroInvalido = digitos !== "" && digitos[0] !== "9" && digitos[0] !== anterior[0];
-
-            // Con 9 dígitos, lo que se escriba de más no se agrega
             const sobrepasa = evento.inputType === "insertText" && digitos.length > 9;
 
             if (esInsercion && (primeroInvalido || sobrepasa)) {
                 const posicion = Math.max(0, cursor - (valor.length - anterior.length));
-
                 inputCelular.value = anterior;
                 inputCelular.setSelectionRange(posicion, posicion);
                 return;
             }
 
             const limpio = digitos.slice(0, 9);
-
             anterior = limpio;
 
-            if (limpio === valor) {
-                return;
-            }
+            if (limpio === valor) return;
 
-            // Mantiene el cursor después del mismo número de dígitos
             const recorte = valor.replace(/\D/g, "").length - digitos.length;
             const posicion = Math.min(limpio.length, Math.max(0, valor.slice(0, cursor).replace(/\D/g, "").length - recorte));
 
             inputCelular.value = limpio;
             inputCelular.setSelectionRange(posicion, posicion);
         });
-
     })();
 
 
-    // ==================================================
-    // SEGURIDAD DE LA CONTRASEÑA (la usan el indicador y el botón Registrar)
-    // ==================================================
-
-    // Requisitos de la lista (el espacio no cuenta como símbolo)
+    // EVALUACIÓN DE CONTRASEÑA
     const REGLAS_PASSWORD = {
         largo: function (clave) { return clave.length >= 8; },
         mayuscula: function (clave) { return /\p{Lu}/u.test(clave); },
@@ -800,8 +738,6 @@
         simbolo: function (clave) { return /[^\p{L}\p{N}\s]/u.test(clave); }
     };
 
-    // Devuelve qué requisitos se cumplen y el nivel:
-    // Débil: menos de 8 caracteres o 2 criterios o menos; Regular: 3; Buena: 4
     function evaluarPassword(clave) {
         const cumple = {};
 
@@ -826,18 +762,12 @@
     }
 
 
-    // ==================================================
-    // INDICADOR DE SEGURIDAD DE LA CONTRASEÑA
-    // ==================================================
-
+    // INDICADOR DE CONTRASEÑA
     (function () {
-
         const inputPassword = document.getElementById("password");
         const indicador = document.getElementById("password-strength");
 
-        if (!inputPassword || !indicador) {
-            return;
-        }
+        if (!inputPassword || !indicador) return;
 
         const texto = indicador.querySelector(".strength-text");
         const requisitos = indicador.querySelectorAll(".password-rules li");
@@ -853,9 +783,7 @@
 
             indicador.hidden = clave === "";
 
-            if (!clave) {
-                return;
-            }
+            if (!clave) return;
 
             const resultado = evaluarPassword(clave);
             const cumple = resultado.cumple;
@@ -871,33 +799,23 @@
         }
 
         inputPassword.addEventListener("input", actualizarIndicador);
-
-        // Por si el navegador rellenó la contraseña al cargar
         actualizarIndicador();
-
     })();
 
 
-    // ==================================================
-    // CONFIRMAR CONTRASEÑA: coinciden / no coinciden
-    // ==================================================
-
+    // CONFIRMAR CONTRASEÑA
     (function () {
-
         const inputPassword = document.getElementById("password");
         const inputConfirmar = document.getElementById("password_confirm");
         const mensaje = document.getElementById("password-match");
 
-        if (!inputPassword || !inputConfirmar || !mensaje) {
-            return;
-        }
+        if (!inputPassword || !inputConfirmar || !mensaje) return;
 
         const texto = mensaje.querySelector(".match-text");
 
         function actualizarCoincidencia() {
             const confirmacion = inputConfirmar.value;
 
-            // Sin nada en Confirmar contraseña no se muestra nada
             if (confirmacion === "") {
                 mensaje.hidden = true;
                 inputConfirmar.classList.remove("coincide", "no-coincide");
@@ -915,70 +833,43 @@
             texto.textContent = coincide ? "Las contraseñas coinciden" : "Las contraseñas no coinciden";
         }
 
-        // Se revisa al escribir en cualquiera de los dos campos
         inputPassword.addEventListener("input", actualizarCoincidencia);
         inputConfirmar.addEventListener("input", actualizarCoincidencia);
-
-        // Por si el navegador rellenó los campos al cargar
         actualizarCoincidencia();
-
     })();
 
 
-    // ==================================================
-    // REGISTRAR: SIMULACIÓN SOLO VISUAL (no envía datos)
-    // Se reemplaza cuando se implemente el registro real en el backend:
-    // cambiar el botón a type="submit" y validar también en el servidor.
-    // ==================================================
-
+    // REGISTRAR: ENVÍO REAL DEL FORMULARIO CON VALIDACIÓN LOCAL
     (function () {
-
         const formulario = document.querySelector(".signup-form");
         const botonRegistrar = document.getElementById("btn-registrar");
-        const exito = document.getElementById("signup-success");
 
-        if (!formulario || !botonRegistrar || !exito) {
-            return;
-        }
+        if (!formulario || !botonRegistrar) return;
 
-        // Cada validación devuelve true si está bien, un texto con el error,
-        // o false si el campo es inválido pero ya tiene su propio mensaje
         const validaciones = {
             nombre_completo: function (valor) {
                 return valor.trim() !== "" || "Ingresa tu nombre completo";
             },
             email: function (valor) {
-                if (valor.trim() === "") {
-                    return "Ingresa tu correo";
-                }
+                if (valor.trim() === "") return "Ingresa tu correo";
                 return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor.trim()) || "Ingresa un correo válido";
             },
             rut: function (valor) {
-                if (valor === "") {
-                    return "Ingresa tu RUT";
-                }
-                // 8 o 9 caracteres sin puntos ni guion (RUT bajo o sobre 10 millones)
+                if (valor === "") return "Ingresa tu RUT";
                 const largo = valor.toUpperCase().replace(/[^0-9K]/g, "").length;
                 return largo === 8 || largo === 9 || "Ingresa un RUT completo";
             },
             celular: function (valor) {
-                if (valor === "") {
-                    return "Ingresa tu celular";
-                }
+                if (valor === "") return "Ingresa tu celular";
                 return /^9\d{8}$/.test(valor) || "Debe tener 9 dígitos y comenzar con 9";
             },
             password: function (valor) {
-                if (valor === "") {
-                    return "Ingresa una contraseña";
-                }
+                if (valor === "") return "Ingresa una contraseña";
                 return evaluarPassword(valor).nivel !== "debil" || "La contraseña debe ser al menos Regular";
             },
             password_confirm: function (valor) {
-                if (valor === "") {
-                    return "Confirma tu contraseña";
-                }
-                // Si no coinciden ya se muestra "Las contraseñas no coinciden"
-                return valor === document.getElementById("password").value || false;
+                if (valor === "") return "Confirma tu contraseña";
+                return valor === document.getElementById("password").value || "Las contraseñas no coinciden";
             }
         };
 
@@ -987,7 +878,7 @@
 
             input.setAttribute("aria-invalid", "true");
 
-            if (typeof mensaje === "string") {
+            if (typeof mensaje === "string" && error) {
                 input.classList.add("invalido");
                 error.querySelector(".error-text").textContent = mensaje;
                 error.hidden = false;
@@ -998,33 +889,29 @@
             const error = document.getElementById("error-" + input.id);
 
             input.classList.remove("invalido");
-            error.hidden = true;
+            if (error) error.hidden = true;
 
-            // En Confirmar contraseña, aria-invalid lo maneja la coincidencia
             if (!input.classList.contains("no-coincide")) {
                 input.removeAttribute("aria-invalid");
             }
         }
 
-        // Al editar un campo se quita su error
         Object.keys(validaciones).forEach(function (id) {
             const input = document.getElementById(id);
-
-            input.addEventListener("input", function () {
-                limpiarError(input);
-            });
+            if (input) {
+                input.addEventListener("input", function () {
+                    limpiarError(input);
+                });
+            }
         });
 
-        let temporizador = null;
-
         botonRegistrar.addEventListener("click", function () {
-
             let primerError = null;
-
-            exito.hidden = true;
 
             Object.keys(validaciones).forEach(function (id) {
                 const input = document.getElementById(id);
+                if (!input) return;
+
                 const resultado = validaciones[id](input.value);
 
                 limpiarError(input);
@@ -1035,33 +922,14 @@
                 }
             });
 
-            // Si algo falta o es inválido, no se borra nada
             if (primerError) {
                 primerError.focus();
                 return;
             }
 
-            // Todo correcto: se limpian los campos y se vuelven a ocultar las contraseñas
-            formulario.reset();
-
-            formulario.querySelectorAll(".toggle-password.is-visible").forEach(function (boton) {
-                boton.click();
-            });
-
-            // Avisa a cada campo que cambió, para que se oculten el indicador,
-            // el mensaje de coincidencia y los bordes de color
-            formulario.querySelectorAll("input").forEach(function (input) {
-                input.dispatchEvent(new Event("input"));
-            });
-
-            exito.hidden = false;
-
-            clearTimeout(temporizador);
-            temporizador = setTimeout(function () {
-                exito.hidden = true;
-            }, 4000);
+            // Si pasa todas las validaciones locales, envía el formulario a Django
+            formulario.submit();
         });
-
     })();
 </script>
 

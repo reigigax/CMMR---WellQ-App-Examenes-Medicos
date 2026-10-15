@@ -3,16 +3,15 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
+
+
+# Cargar datos de entorno asignados en el archivo '.env'
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Cargar datos de entorno asignados en el archivo '.env'
-load_dotenv(BASE_DIR.parent / '.env')
-
-# 
 SECRET_KEY = 'django-insecure-)%j3mme!wxxfj_r2ea7*e&01er1hdqf7@@28*kl033!+-yk99p'
 DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0', 'web', 'db']
@@ -32,8 +31,10 @@ INSTALLED_APPS = [
     'exams_manager_api',
 
     # Frameworks instalados
-    "rest_framework",
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -45,7 +46,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'wellq.urls'
+
 
 TEMPLATES = [
     {
@@ -62,7 +65,9 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'wellq.wsgi.application'
+
 
 # Configuración de la base de datos conectada al contenedor Docker
 DATABASES = {
@@ -73,16 +78,16 @@ DATABASES = {
         #             (el '#' al inicio) a la base de datos de Postgres
 
         # BASE DE DATOS DE -DJANGO-
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3',
         
         # BASE DE DATOS DE -POSTGRES-
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': os.environ['POSTGRES_DB'],
-        # 'USER': os.environ['POSTGRES_USER'],
-        # 'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        # 'HOST': os.environ['POSTGRES_HOST'],
-        # 'PORT': os.environ['POSTGRES_PORT'],
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['POSTGRES_DB'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': os.environ['POSTGRES_PORT'],
     }
 }
 
@@ -115,11 +120,28 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 
-# Email
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Ruta física donde se guardarán los archivos en el servidor
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# URL pública para acceder a los archivos subidos
+MEDIA_URL = '/media/'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
