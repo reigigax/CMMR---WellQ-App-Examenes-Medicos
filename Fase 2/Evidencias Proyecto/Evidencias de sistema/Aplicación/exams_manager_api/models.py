@@ -127,7 +127,6 @@ class Clinico(models.Model):
         return f"{self.nombres} {self.apellidos}"
 
 
-
 class Examen(models.Model):
     id = models.SmallAutoField(primary_key=True)
     titulo = models.CharField(max_length=150)
@@ -137,24 +136,32 @@ class Examen(models.Model):
     version_archivo = models.SmallIntegerField(default=1)
 
     archivo = models.FileField(
-        upload_to='examenes_pdf/',
-        validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
-        help_text='Solo se permiten archivos en formato PDF'
+        upload_to='examenes_medicos/',
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png']
+            )
+        ],
+        help_text='Formatos permitidos: PDF, DOC, DOCX, JPG, JPEG, PNG'
     )
-    
+
     paciente = models.ForeignKey(
-        Paciente, 
-        on_delete=models.CASCADE, 
-        db_column='paciente_fk'
+        'Paciente',
+        on_delete=models.CASCADE,
+        db_column='paciente_fk',
+        null=True,
+        blank=True
     )
     clinico = models.ForeignKey(
-        Clinico, 
-        on_delete=models.CASCADE, 
-        db_column='clinico_fk'
+        'Clinico',
+        on_delete=models.CASCADE,
+        db_column='clinico_fk',
+        null=True,
+        blank=True
     )
 
     class Meta:
         db_table = 'examen'
 
     def __str__(self):
-        return f"{self.titulo} - {self.paciente}"
+        return self.titulo

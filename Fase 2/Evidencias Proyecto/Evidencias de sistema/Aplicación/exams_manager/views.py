@@ -7,33 +7,112 @@ API_BASE_URL = "http://127.0.0.1:8000/api/v1"
 
 
 # ------------------------------------------------------------------
-# Decorador de protección para validar la presencia del token JWT
+# Excepción y Helper Centralizado para la API
+# ------------------------------------------------------------------
+class TokenExpiredException(Exception):
+    """Excepción lanzada cuando la API responde con HTTP 401 Unauthorized."""
+    pass
+
+
+def api_request(request, method, endpoint, data=None, files=None, json=None, timeout=10):
+    """
+    Función centralizada para realizar peticiones a la API REST.
+    Si la API responde con un estado 401 (Unauthorized), interrumpe el flujo
+    lanzando TokenExpiredException.
+    """
+    access_token = request.session.get('access_token')
+    headers = {}
+    
+    if access_token:
+        headers['Authorization'] = f"Bearer {access_token}"
+
+    url = f"{API_BASE_URL}/{endpoint.lstrip('/')}"
+
+    try:
+        response = requests.request(
+            method=method,
+            url=url,
+            headers=headers,
+            data=data,
+            files=files,
+            json=json,
+            timeout=timeout
+        )
+
+        # Si el token caducó o es inválido en la API, lanzamos la excepción
+        if response.status_code == 401:
+            raise TokenExpiredException()
+
+        return response
+    except requests.exceptions.RequestException:
+        return None
+
+
+# ------------------------------------------------------------------
+# Decoradores de Protección con Captura Global de Caducidad
 # ------------------------------------------------------------------
 def jwt_required(view_func):
+    """
+    Verifica que exista token en la sesión y captura automáticamente 
+    si el token caduca durante cualquier operación.
+    """
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
-        access_token = request.session.get('access_token')
-        if not access_token:
-            messages.warning(request, "Debes iniciar sesión para acceder a esta sección.")
+        if not request.session.get('access_token'):
+            messages.error(request, "Sesion de Usuario ha Caducado")
             return redirect('login')
-        return view_func(request, *args, **kwargs)
+
+        try:
+            return view_func(request, *args, **kwargs)
+        except TokenExpiredException:
+            request.session.flush()
+            messages.error(request, "Sesion de Usuario ha Caducado")
+            return redirect('login')
+
+    return _wrapped_view
+
+
+def clinico_required(view_func):
+    """
+    Verifica que la sesión corresponda a un perfil clínico y gestiona
+    la caducidad del token de forma global.
+    """
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.session.get('access_token'):
+            messages.error(request, "Sesion de usuario ha caducado")
+            return redirect('login')
+
+        user_type = request.session.get('user_type')
+        if user_type != 'clinico':
+            messages.error(request, "Acceso restringido: Esta sección requiere perfil clínico.")
+            return redirect('paciente')
+
+        try:
+            return view_func(request, *args, **kwargs)
+        except TokenExpiredException:
+            request.session.flush()
+            messages.error(request, "Sesion de usuario ha caducado")
+            return redirect('login')
+
     return _wrapped_view
 
 
 # ------------------------------------------------------------------
-# Vistas NO protegidas (Públicas / Autenticación)
+# Vistas Públicas / Autenticación
 # ------------------------------------------------------------------
-
 def login(request):
+    # Redirección si la sesión aún se encuentra activa
+    if request.session.get('access_token'):
+        if request.session.get('user_type') == 'clinico':
+            return redirect('clinico')
+        return redirect('paciente')
+
     if request.method == 'POST':
         rut_raw = request.POST.get('rut', '')
-        # Elimina puntos y guión para enviar solo los dígitos/k
         rut = rut_raw.replace('.', '').replace('-', '').strip()
         password = request.POST.get('password')
 
-        # Petición a la API...
-
-        # Enviar credenciales a la API
         try:
             response = requests.post(
                 f"{API_BASE_URL}/auth/login/",
@@ -44,14 +123,17 @@ def login(request):
             if response.status_code == 200:
                 data = response.json()
                 
-                # Guardar los tokens JWT y datos de usuario en la sesión de Django
                 request.session['access_token'] = data.get('access')
                 request.session['refresh_token'] = data.get('refresh')
                 request.session['user_type'] = data.get('user_type')
                 request.session['nombre_completo'] = data.get('nombre_completo')
+                request.session['rut'] = rut
 
                 messages.success(request, f"Bienvenido/a {data.get('nombre_completo')}")
-                return redirect('home')
+                
+                if data.get('user_type') == 'clinico':
+                    return redirect('clinico')
+                return redirect('paciente')
             else:
                 error_msg = response.json().get('detail', 'Credenciales inválidas')
                 messages.error(request, error_msg)
@@ -68,15 +150,10 @@ def logout_view(request):
     return redirect('login')
 
 
-# ------------------------------------------------------------------
-# Vistas Protegidas (Requieren JWT en Sesión)
-# ------------------------------------------------------------------
-@jwt_required
-def base(request):
-    return render(request, 'base.html')
-
-
 def sign_up(request):
+    if request.session.get('access_token'):
+        return redirect('paciente')
+
     if request.method == 'POST':
         nombre_completo = request.POST.get('nombre_completo', '').strip()
         email = request.POST.get('email', '').strip()
@@ -85,12 +162,9 @@ def sign_up(request):
         password = request.POST.get('password', '')
         direccion_id = request.POST.get('direccion_id', 1)
 
-        # Separar Nombre completo en nombres y apellidos
         partes_nombre = nombre_completo.split(' ', 1)
         nombres = partes_nombre[0]
         apellidos = partes_nombre[1] if len(partes_nombre) > 1 else ' '
-
-        # Limpiar el RUT (remover puntos y guión)
         rut = rut_raw.replace('.', '').replace('-', '').upper()
 
         payload = {
@@ -113,7 +187,6 @@ def sign_up(request):
                 errores = response.json()
                 msg = "Error al registrar la cuenta."
                 if isinstance(errores, dict):
-                    # Formatear el primer mensaje de error devuelto por la API
                     primer_campo = next(iter(errores))
                     msg = f"{primer_campo.capitalize()}: {errores[primer_campo][0] if isinstance(errores[primer_campo], list) else errores[primer_campo]}"
                 messages.error(request, msg)
@@ -124,106 +197,82 @@ def sign_up(request):
     return render(request, 'exams_manager/sign_up.html')
 
 
+# ------------------------------------------------------------------
+# Vistas Protegidas
+# ------------------------------------------------------------------
 @jwt_required
 def upload(request):
-    return render(request, 'exams_manager/upload.html')
+    if request.method == 'POST':
+        archivos = request.FILES.getlist('documentos')
+
+        if not archivos:
+            messages.error(request, "No se seleccionó ningún archivo para subir.")
+            return redirect('upload')
+
+        exitos = 0
+        errores = 0
+
+        for f in archivos:
+            files = {'archivo': (f.name, f.read(), f.content_type)}
+            data = {
+                'titulo': f.name,
+                'sesion': 'Sesión Portal Web',
+                'nota_clinica': 'Documento cargado desde el panel de usuario.',
+                'version_archivo': 1
+            }
+
+            response = api_request(request, 'POST', '/examenes/', data=data, files=files, timeout=15)
+
+            if response and response.status_code in [200, 201]:
+                exitos += 1
+            else:
+                errores += 1
+
+        if exitos > 0:
+            messages.success(request, f"Se cargaron {exitos} documento(s) correctamente.")
+        if errores > 0:
+            messages.error(request, f"Ocurrió un error al procesar {errores} archivo(s).")
+
+        return redirect('upload')
+
+    response = api_request(request, 'GET', '/examenes/')
+    documentos = response.json() if (response and response.status_code == 200) else []
+
+    context = {
+        "nombre_completo": request.session.get('nombre_completo', 'Usuario'),
+        "rut": request.session.get('rut', ''),
+        "documentos": documentos
+    }
+
+    return render(request, 'exams_manager/upload.html', context)
 
 
-@jwt_required
-def home(request):
-    return render(request, 'exams_manager/home.html')
-
-
-@jwt_required
+@clinico_required
 def clinico(request):
-    documentos = [
-        {
-            "paciente": "Juan Perez",
-            "rut": "11.111.111-1",
-            "tipo": "Receta Medica",
-            "fecha": "01-01-2026",
-            "estado": "Disponible",
-        },
-        {
-            "paciente": "Juan Perez",
-            "rut": "11.111.111-1",
-            "tipo": "Licencia Medica",
-            "fecha": "01-01-2026",
-            "estado": "Disponible",
-        },
-        {
-            "paciente": "Juan Perez",
-            "rut": "11.111.111-1",
-            "tipo": "Receta Medica",
-            "fecha": "01-01-2026",
-            "estado": "Disponible",
-        },
-    ]
+    response = api_request(request, 'GET', '/examenes/')
+    documentos = response.json() if (response and response.status_code == 200) else []
 
     return render(
         request,
         "exams_manager/clinico.html",
-        {"documentos": documentos},
+        {
+            "nombre_completo": request.session.get('nombre_completo'),
+            "rut": request.session.get('rut'),
+            "documentos": documentos
+        },
     )
 
 
 @jwt_required
 def paciente(request):
-    documentos = [
-        {
-            "nombre": "recetamedica.pdf",
-            "tipo": "Receta Medica",
-            "fecha": "01-01-2025",
-            "estado": "Vigente",
-        },
-        {
-            "nombre": "licenciamedica.docx",
-            "tipo": "Licencia Medica",
-            "fecha": "01-01-2025",
-            "estado": "En Revisión",
-        },
-        {
-            "nombre": "licenciamedica.docx",
-            "tipo": "Imagenologia",
-            "fecha": "01-01-2025",
-            "estado": "Vigente",
-        },
-        {
-            "nombre": "recetamedica.pdf",
-            "tipo": "Receta Medica",
-            "fecha": "01-01-2025",
-            "estado": "En Revisión",
-        },
-        {
-            "nombre": "recetamedica.pdf",
-            "tipo": "Receta Medica",
-            "fecha": "01-01-2025",
-            "estado": "Vigente",
-        },
-        {
-            "nombre": "licenciamedica.docx",
-            "tipo": "Licencia Medica",
-            "fecha": "01-01-2025",
-            "estado": "Vigente",
-        },
-        {
-            "nombre": "recetamedica.pdf",
-            "tipo": "Receta Medica",
-            "fecha": "01-01-2025",
-            "estado": "Vigente",
-        },
-        {
-            "nombre": "licenciamedica.docx",
-            "tipo": "Licencia Medica",
-            "fecha": "01-01-2025",
-            "estado": "Expirada",
-        },
-    ]
+    response = api_request(request, 'GET', '/examenes/')
+    documentos = response.json() if (response and response.status_code == 200) else []
 
-    return render(
-        request,
-        "exams_manager/paciente.html",
-        {
-            "documentos": documentos
-        }
-    )
+    context = {
+        "nombre_completo": request.session.get('nombre_completo', 'Paciente'),
+        "rut": request.session.get('rut', 'Sin RUT registrado'),
+        "user_type": request.session.get('user_type'),
+        "documentos": documentos
+    }
+
+    return render(request, "exams_manager/paciente.html", context)

@@ -9,9 +9,7 @@ WellQ | Panel Paciente
 {% load static %}
 
 <head>
-
     <link rel="stylesheet" href="{% static 'css/paciente.css' %}">
-
 </head>
 
 <div class="patient-layout">
@@ -25,7 +23,7 @@ WellQ | Panel Paciente
 
         <nav class="menu">
 
-            <a href="#">
+            <a href="{% url 'paciente' %}">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M3 11.5L12 4l9 7.5"/>
@@ -36,7 +34,7 @@ WellQ | Panel Paciente
                 <span class="menu-text">Inicio</span>
             </a>
 
-            <a href="#" class="active">
+            <a href="{% url 'paciente' %}" class="active">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M6 2h9l5 5v15H6z"/>
@@ -48,15 +46,13 @@ WellQ | Panel Paciente
                 <span class="menu-text">Mis Documentos</span>
             </a>
 
-            <a href="#">
+            <a href="{% url 'logout' %}">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
-                        <path d="M4 6h16"/>
-                        <path d="M4 12h16"/>
-                        <path d="M4 18h16"/>
+                        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
                 </span>
-                <span class="menu-text">Mis Archivos</span>
+                <span class="menu-text">Cerrar Sesión</span>
             </a>
 
         </nav>
@@ -79,27 +75,21 @@ WellQ | Panel Paciente
                     </div>
 
                     <div>
-                        <strong>Juan Perez</strong>
-                        <span>RUT: 11.111.111-1</span>
-                        <span>Edad: 25 &nbsp; | &nbsp; Género: Masculino</span>
+                        <strong>{{ nombre_completo }}</strong>
+                        <span>RUT: {{ rut }}</span>
+                        <span>Perfil: {{ user_type|title }}</span>
                     </div>
 
                 </div>
 
                 <div class="summary-card">
-                    <span class="summary-label">Última Atención</span>
-                    <strong>15-09-2025</strong>
-                </div>
-
-                <div class="summary-card">
-                    <span class="summary-label">Médico tratante</span>
-                    <strong>Dra. Carolina Rojas</strong>
-                    <span>Kinesióloga</span>
+                    <span class="summary-label">Estado de Cuenta</span>
+                    <strong>Activa</strong>
                 </div>
 
                 <div class="summary-card protected">
                     <span class="summary-label">Datos Protegidos</span>
-                    <strong>Información segura</strong>
+                    <strong>Sesión Segura</strong>
                 </div>
 
             </div>
@@ -108,68 +98,34 @@ WellQ | Panel Paciente
 
         <section class="content-card">
 
+            <!-- ALERTAS DE MENSAJES -->
+            {% if messages %}
+                {% for message in messages %}
+                    <p style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+
             <div class="content-header">
 
                 <div>
-                    <h1>Documentos de Pacientes</h1>
+                    <h1>Mis Exámenes Médicos</h1>
                     <p>
-                        Aquí puedes ver, buscar, descargar o eliminar tus documentos médicos.
+                        Consulta los exámenes e informes médicos registrados en la plataforma.
                     </p>
                 </div>
 
-                <button class="upload-btn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 16V4"/>
-                        <path d="M7.5 8.5L12 4l4.5 4.5"/>
-                        <path d="M5 20h14"/>
-                    </svg>
-                    Subir documento
-                </button>
-
-            </div>
-
-            <div class="filters">
-
-                <div class="search-box">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="11" cy="11" r="7"/>
-                        <path d="M16.5 16.5L21 21"/>
-                    </svg>
-
-                    <input
-                        type="text"
-                        placeholder="Buscar por nombre de documento, tipo o fecha..."
-                    >
-                </div>
-
-                <div class="filter">
-                    <label>Tipo de documento</label>
-                    <select>
-                        <option>Todos</option>
-                        <option>Receta Médica</option>
-                        <option>Licencia Médica</option>
-                        <option>Imagenología</option>
-                    </select>
-                </div>
-
-                <div class="filter">
-                    <label>Estado</label>
-                    <select>
-                        <option>Todos</option>
-                        <option>Vigente</option>
-                        <option>En Revisión</option>
-                        <option>Expirada</option>
-                    </select>
-                </div>
-
-                <div class="filter">
-                    <label>Fecha</label>
-                    <select>
-                        <option>Todas</option>
-                        <option>2025</option>
-                        <option>2026</option>
-                    </select>
-                </div>
+                <a href="{% url 'upload' %}">
+                    <button class="upload-btn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 16V4"/>
+                            <path d="M7.5 8.5L12 4l4.5 4.5"/>
+                            <path d="M5 20h14"/>
+                        </svg>
+                        Subir documento
+                    </button>
+                </a>
 
             </div>
 
@@ -179,25 +135,23 @@ WellQ | Panel Paciente
 
                     <thead>
                         <tr>
-                            <th>
-                                <input type="checkbox">
-                            </th>
-                            <th>Tipo de Documento</th>
-                            <th>Tipo</th>
-                            <th>Fecha de Emisión</th>
-                            <th>Estado</th>
+                            <th>ID Examen</th>
+                            <th>Título del Examen</th>
+                            <th>Sesión</th>
+                            <th>Fecha Subido</th>
+                            <th>Nota Clínica</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
-                        {% for documento in documentos %}
+                        {% for doc in documentos %}
 
                         <tr>
 
                             <td>
-                                <input type="checkbox">
+                                <strong>#{{ doc.id }}</strong>
                             </td>
 
                             <td>
@@ -212,7 +166,7 @@ WellQ | Panel Paciente
                                     </div>
 
                                     <span>
-                                        {{ documento.nombre }}
+                                        {{ doc.titulo }}
                                     </span>
 
                                 </div>
@@ -220,54 +174,32 @@ WellQ | Panel Paciente
                             </td>
 
                             <td>
-                                {{ documento.tipo }}
+                                {{ doc.sesion }}
                             </td>
 
                             <td>
-                                {{ documento.fecha }}
+                                {{ doc.fecha_subido }}
                             </td>
 
                             <td>
-
-                                <span
-                                    class="status
-                                    {% if documento.estado == 'Vigente' %}status-green
-                                    {% elif documento.estado == 'En Revisión' %}status-blue
-                                    {% else %}status-red{% endif %}"
-                                >
-                                    {{ documento.estado }}
-                                </span>
-
+                                {{ doc.nota_clinica|default:"Sin observaciones" }}
                             </td>
 
                             <td>
 
                                 <div class="actions">
 
-                                    <button class="action-btn" title="Ver">
-                                        <svg viewBox="0 0 24 24">
-                                            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/>
-                                            <circle cx="12" cy="12" r="3"/>
-                                        </svg>
-                                    </button>
-
-                                    <button class="action-btn" title="Descargar">
-                                        <svg viewBox="0 0 24 24">
-                                            <path d="M12 3v12"/>
-                                            <path d="M7.5 11l4.5 4.5 4.5-4.5"/>
-                                            <path d="M5 21h14"/>
-                                        </svg>
-                                    </button>
-
-                                    <button class="action-btn danger" title="Eliminar">
-                                        <svg viewBox="0 0 24 24">
-                                            <path d="M4 7h16"/>
-                                            <path d="M9 7V4h6v3"/>
-                                            <path d="M7 7l1 14h8l1-14"/>
-                                            <path d="M10 11v6"/>
-                                            <path d="M14 11v6"/>
-                                        </svg>
-                                    </button>
+                                    {% if doc.archivo %}
+                                        <a href="{{ doc.archivo }}" target="_blank" class="action-btn" title="Ver / Descargar">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M12 3v12"/>
+                                                <path d="M7.5 11l4.5 4.5 4.5-4.5"/>
+                                                <path d="M5 21h14"/>
+                                            </svg>
+                                        </a>
+                                    {% else %}
+                                        <span style="font-size: 0.8rem; color: #888;">No adjunto</span>
+                                    {% endif %}
 
                                 </div>
 
@@ -275,23 +207,19 @@ WellQ | Panel Paciente
 
                         </tr>
 
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 20px; color: #888;">
+                                No se encontraron exámenes o documentos registrados para esta cuenta.
+                            </td>
+                        </tr>
+
                         {% endfor %}
 
                     </tbody>
 
                 </table>
-
-            </div>
-
-            <div class="pagination">
-
-                <button>‹</button>
-
-                <button class="page-active">
-                    1
-                </button>
-
-                <button>›</button>
 
             </div>
 

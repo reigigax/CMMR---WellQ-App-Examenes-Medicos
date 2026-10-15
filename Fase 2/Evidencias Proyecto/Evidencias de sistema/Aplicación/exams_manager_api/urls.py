@@ -18,11 +18,10 @@ urlpatterns = [
 router = DefaultRouter()
 router.register(r'regiones', RegionViewSet)
 router.register(r'comunas', ComunaViewSet)
-router.register(r'direcciones', DireccionViewSet)
-router.register(r'pacientes', PacienteViewSet)
-router.register(r'clinicas', ClinicaViewSet)
-router.register(r'clinicos', ClinicoViewSet)
+router.register(r'direccion', DireccionViewSet)
+router.register(r'paciente', PacienteViewSet)
+router.register(r'clinica', ClinicaViewSet)
+router.register(r'clinico', ClinicoViewSet)
 router.register(r'examenes', ExamenViewSet)
 
 urlpatterns += router.urls
-# urls.py (API)

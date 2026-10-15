@@ -1,91 +1,4 @@
 --
--- Tablas de la base de datos generada
---
-
--- public.region definition
-create table public.region (
-	id int2 generated always as identity( increment by 1 minvalue 1 maxvalue 32767 start 1 cache 1 no cycle) not null,
-	nombre varchar(50) storage MAIN not null,
-	numero bpchar(4) storage MAIN not null,
-	constraint region_pk primary key (id)
-);
-
--- public.comuna definition
-create table public.comuna (
-	id int2 generated always as identity( increment by 1 minvalue 1 maxvalue 32767 start 1 cache 1 no cycle) not null,
-	nombre varchar(40) storage MAIN not null,
-	region_fk int2 not null,
-	constraint comuna_pk primary key (id),
-	constraint region_fk foreign key (region_fk) references public.region(id)
-);
-
--- public.direccion definition
-create table public.direccion (
-	id int4 generated always as identity( increment by 1 minvalue 1 maxvalue 2147483647 start 1 cache 1 no cycle) not null,
-	calle varchar(75) storage MAIN not null,
-	numero int2 null,
-	comuna_fk int2 not null,
-	constraint direccion_pk primary key (id),
-	constraint comuna_fk foreign key (comuna_fk) references public.comuna(id)
-);
-
--- public.paciente definition
-create table public.paciente (
-	id int2 generated always as identity( increment by 1 minvalue 1 maxvalue 32767 start 1 cache 1 no cycle) not null,
-	rut varchar(9) storage MAIN not null,
-	nombres varchar(200) storage MAIN not null,
-	apellidos varchar(250) storage MAIN not null,
-	correo varchar(250) storage MAIN not null,
-	celular int8 null, -- Cambiado de int2 a int8 para admitir números de teléfono
-	direccion_fk int4 not null,
-	constraint paciente_pk primary key (id),
-	constraint paciente_unique unique (rut),
-	constraint paciente_unique_1 unique (correo),
-	constraint direccion_fk foreign key (direccion_fk) references public.direccion(id)
-);
-
--- public.clinica definition
-create table public.clinica (
-	id int2 generated always as identity( increment by 1 minvalue 1 maxvalue 32767 start 1 cache 1 no cycle) not null,
-	nombre varchar(75) storage MAIN not null,
-	direccion_fk int4 not null,
-	constraint clinica_pk primary key (id),
-	constraint direccion_fk foreign key (direccion_fk) references public.direccion(id)
-);
-
--- public.clinico definition
-create table public.clinico (
-	id int2 generated always as identity( increment by 1 minvalue 1 maxvalue 32767 start 1 cache 1 no cycle) not null,
-	rut varchar(9) storage MAIN not null,
-	nombres varchar(200) storage MAIN not null,
-	apellidos varchar(200) storage MAIN not null,
-	correo varchar(250) storage MAIN not null,
-	celular int8 null, -- Cambiado de int2 a int8 para admitir números de teléfono
-	clinica_fk int2 not null,
-	direccion_fk int4 not null,
-	constraint clinico_pk primary key (id),
-	constraint clinico_unique unique (correo),
-	constraint clinica_fk foreign key (clinica_fk) references public.clinica(id),
-	constraint direccion_fk foreign key (direccion_fk) references public.direccion(id)
-);
-
--- public.examen definition
-create table public.examen (
-	id int2 generated always as identity( increment by 1 minvalue 1 maxvalue 32767 start 1 cache 1 no cycle) not null,
-	titulo varchar(150) storage MAIN not null,
-	sesion varchar(150) storage MAIN not null,
-	nota_clinica varchar(500) storage MAIN null,
-	fecha_subido date not null,
-	version_archivo int2 not null,
-	paciente_fk int2 not null,
-	clinico_fk int2 not null,
-	constraint examen_pk primary key (id),
-	constraint clinico_fk foreign key (clinico_fk) references public.clinico(id),
-	constraint paciente_fk foreign key (paciente_fk) references public.paciente(id)
-);
-
-
---
 -- Inserción de datos iniciales (Regiones, Comunas, Direcciones, Clínicas y Clínicos)
 --
 
@@ -181,41 +94,41 @@ INSERT INTO public.comuna (nombre,region_fk) VALUES
 	 ('Santa María',6), ('Santo Domingo',6), ('Valparaíso',6), ('Villa Alemana',6),
 	 ('Viña del Mar',6), ('Zapallar',6);
 
--- Inserción de datos en 'direccion'
+-- Datos en 'Direccion'
 INSERT INTO public.direccion (calle, numero, comuna_fk) VALUES
-('Av. Providencia', 1234, 1),
-('Calle Las Condes', 567, 2),
-('Av. Libertador Bernardo O''Higgins', 890, 3),
-('Calle San Martín', 432, 4),
-('Av. Vicuña Mackenna', 1122, 5),
-('Calle Los Leones', 3344, 6),
-('Av. Vitacura', 5566, 7),
-('Calle Independencia', 7788, 8),
-('Av. Matta', 9900, 9),
-('Calle Grecia', 1212, 10);
+	 ('Av. Providencia', 1234, 1),
+	 ('Calle Las Condes', 567, 2),
+	 ('Av. Libertador Bernardo O''Higgins', 890, 3),
+	 ('Calle San Martín', 432, 4),
+	 ('Av. Vicuña Mackenna', 1122, 5),
+	 ('Calle Los Leones', 3344, 6),
+	 ('Av. Vitacura', 5566, 7),
+	 ('Calle Independencia', 7788, 8),
+	 ('Av. Matta', 9900, 9),
+	 ('Calle Grecia', 1212, 10);
 
--- Inserción de datos en 'clinica'
+-- Datos en 'Clinica'
 INSERT INTO public.clinica (nombre, direccion_fk) VALUES
-('Clínica Alemana Providencia', 1),
-('Clínica Santa María', 2),
-('Clínica Las Condes Centro', 3),
-('Clínica Indisa', 4),
-('Clínica RedSalud Vitacura', 5),
-('Clínica Dávila Recoleta', 6),
-('Clínica Bupa Santiago', 7),
-('Clínica Universidad de los Andes', 8),
-('Clínica San Carlos de Apoquindo', 9),
-('Clínica Vespucio', 10);
+	 ('Clínica Alemana Providencia', 1),
+	 ('Clínica Santa María', 2),
+	 ('Clínica Las Condes Centro', 3),
+	 ('Clínica Indisa', 4),
+	 ('Clínica RedSalud Vitacura', 5),
+	 ('Clínica Dávila Recoleta', 6),
+	 ('Clínica Bupa Santiago', 7),
+	 ('Clínica Universidad de los Andes', 8),
+	 ('Clínica San Carlos de Apoquindo', 9),
+	 ('Clínica Vespucio', 10);
 
--- Inserción de datos en 'clinico'
+-- Datos en 'Clinico'
 INSERT INTO public.clinico (rut, nombres, apellidos, correo, celular, clinica_fk, direccion_fk) VALUES
-('121212121', 'Dr. Roberto', 'Gómez Bolaños', 'roberto.gomez@clinica.cl', 8101, 1, 1),
-('131313131', 'Dra. Claudia', 'Hernández Tapia', 'claudia.hernandez@clinica.cl', 8102, 2, 2),
-('141414141', 'Dr. Marcelo', 'Ríos Mayorga', 'marcelo.rios@clinica.cl', 8103, 3, 3),
-('151515151', 'Dra. Patricia', 'Navarro Castro', 'patricia.navarro@clinica.cl', 8104, 4, 4),
-('161616161', 'Dr. Gabriel', 'Boric Font', 'gabriel.boric@clinica.cl', 8105, 5, 5),
-('171717171', 'Dra. Andrea', 'Molina Palma', 'andrea.molina@clinica.cl', 8106, 6, 6),
-('181818181', 'Dr. Esteban', 'Paredes Quintanilla', 'esteban.paredes@clinica.cl', 8107, 7, 7),
-('191919191', 'Dra. Daniela', 'Vega Hernández', 'daniela.vega@clinica.cl', 8108, 8, 8),
-('202020202', 'Dr. Felipe', 'Camiroaga Fernández', 'felipe.camiroaga@clinica.cl', 8109, 9, 9),
-('212121212', 'Dra. Javiera', 'Parra Sandoval', 'javiera.parra@clinica.cl', 8110, 10, 10);
+	 ('121212121', 'Dr. Roberto', 'Gómez Bolaños', 'roberto.gomez@clinica.cl', 8101, 1, 1),
+	 ('131313131', 'Dra. Claudia', 'Hernández Tapia', 'claudia.hernandez@clinica.cl', 8102, 2, 2),
+	 ('141414141', 'Dr. Marcelo', 'Ríos Mayorga', 'marcelo.rios@clinica.cl', 8103, 3, 3),
+	 ('151515151', 'Dra. Patricia', 'Navarro Castro', 'patricia.navarro@clinica.cl', 8104, 4, 4),
+	 ('161616161', 'Dr. Gabriel', 'Boric Font', 'gabriel.boric@clinica.cl', 8105, 5, 5),
+	 ('171717171', 'Dra. Andrea', 'Molina Palma', 'andrea.molina@clinica.cl', 8106, 6, 6),
+	 ('181818181', 'Dr. Esteban', 'Paredes Quintanilla', 'esteban.paredes@clinica.cl', 8107, 7, 7),
+	 ('191919191', 'Dra. Daniela', 'Vega Hernández', 'daniela.vega@clinica.cl', 8108, 8, 8),
+	 ('202020202', 'Dr. Felipe', 'Camiroaga Fernández', 'felipe.camiroaga@clinica.cl', 8109, 9, 9),
+	 ('212121212', 'Dra. Javiera', 'Parra Sandoval', 'javiera.parra@clinica.cl', 8110, 10, 10);

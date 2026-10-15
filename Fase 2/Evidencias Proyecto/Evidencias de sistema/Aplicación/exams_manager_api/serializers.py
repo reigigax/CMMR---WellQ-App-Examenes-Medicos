@@ -61,19 +61,23 @@ class PacienteRegistroSerializer(serializers.ModelSerializer):
         return paciente
 
 class RutTokenObtainPairSerializer(TokenObtainPairSerializer):
-    username_field = 'rut'
+    # Declaramos el campo rut explícitamente
+    rut = serializers.CharField(write_only=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Reemplazamos el campo 'username' por 'rut'
-        self.fields['rut'] = serializers.CharField(write_only=True)
-        del self.fields[self.username_field]
+        # Eliminamos el campo 'username' que genera SimpleJWT por defecto
+        if 'username' in self.fields:
+            del self.fields['username']
 
     def validate(self, attrs):
-        rut = attrs.get('rut')
+        rut_raw = attrs.get('rut', '')
         password = attrs.get('password')
 
-        # Intentamos autenticar usando el RUT como username
+        # Limpiamos puntos y guión por si el RUT viene formateado desde el frontend
+        rut = rut_raw.replace('.', '').replace('-', '').strip()
+
+        # Autenticamos contra auth_user usando el RUT como username
         user = authenticate(username=rut, password=password)
 
         if not user:
@@ -82,10 +86,10 @@ class RutTokenObtainPairSerializer(TokenObtainPairSerializer):
         if not user.is_active:
             raise AuthenticationFailed('Usuario inactivo.')
 
-        # Generar tokens base
+        # Generar los tokens JWT pasando el diccionario esperado por SimpleJWT
         data = super().validate({'username': user.username, 'password': password})
 
-        # Identificar el rol/tipo de usuario para el frontend
+        # Identificar el tipo de usuario y adjuntar datos al response
         data['user_type'] = 'unknown'
         if hasattr(user, 'paciente_profile'):
             data['user_type'] = 'paciente'
