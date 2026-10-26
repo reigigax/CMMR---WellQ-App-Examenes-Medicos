@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Panel Clínico | WellQ
+WellQ | Panel Clínico
 {% endblock %}
 
 {% block content %}
@@ -15,99 +15,70 @@ Panel Clínico | WellQ
     <aside class="sidebar">
 
         <div class="brand">
-
             <div class="brand-circle"></div>
-
             <span>WellQ</span>
-
         </div>
-
 
         <nav class="menu">
 
             <!-- INICIO -->
-
-            <a href="#">
-
+            <a href="{% url 'clinico' %}">
                 <span class="menu-icon">
-
                     <svg viewBox="0 0 24 24">
                         <path d="M3 11.5L12 4l9 7.5"/>
                         <path d="M5 10v10h14V10"/>
                         <path d="M9 20v-6h6v6"/>
                     </svg>
-
                 </span>
-
-                <span class="menu-text">
-                    Inicio
-                </span>
-
+                <span class="menu-text">Inicio</span>
             </a>
 
-
-            <!-- DOCUMENTOS -->
-
-            <a href="#">
-
+            <!-- SUBIR DOCUMENTOS -->
+            <a href="{% url 'upload' %}">
                 <span class="menu-icon">
-
                     <svg viewBox="0 0 24 24">
                         <path d="M6 2h9l5 5v15H6z"/>
                         <path d="M14 2v6h6"/>
-                        <path d="M9 13h8"/>
-                        <path d="M9 17h8"/>
+                        <path d="M12 18V10"/>
+                        <path d="M9 13l3-3 3 3"/>
                     </svg>
-
                 </span>
-
-                <span class="menu-text">
-                    Documentos
-                </span>
-
+                <span class="menu-text">Documentos</span>
             </a>
 
-
             <!-- MIS ARCHIVOS -->
-
-            <a href="#">
-
+            <a href="{% url 'paciente' %}">
                 <span class="menu-icon">
-
                     <svg viewBox="0 0 24 24">
                         <path d="M4 6h16"/>
                         <path d="M4 12h16"/>
                         <path d="M4 18h16"/>
                     </svg>
-
                 </span>
-
-                <span class="menu-text">
-                    Mis Archivos
-                </span>
-
+                <span class="menu-text">Mis Archivos</span>
             </a>
 
-
-            <!-- PACIENTES -->
-
+            <!-- PACIENTES (SECCIÓN ACTIVA) -->
             <a href="{% url 'clinico' %}" class="active">
-
                 <span class="menu-icon">
-
                     <svg viewBox="0 0 24 24">
                         <circle cx="9" cy="8" r="4"/>
                         <path d="M2.5 20c0-4 2.8-7 6.5-7s6.5 3 6.5 7"/>
                         <circle cx="17" cy="9" r="3"/>
                         <path d="M16 14c3.3 0 5.5 2.4 5.5 6"/>
                     </svg>
-
                 </span>
+                <span class="menu-text">Pacientes</span>
+            </a>
 
-                <span class="menu-text">
-                    Pacientes
+            <!-- CERRAR SESIÓN -->
+            <a href="{% url 'logout' %}">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
                 </span>
-
+                <span class="menu-text">Cerrar Sesión</span>
             </a>
 
         </nav>
@@ -130,15 +101,13 @@ Panel Clínico | WellQ
             <div class="profile">
 
                 <div class="profile-icon">
-
                     <svg viewBox="0 0 24 24">
                         <circle cx="12" cy="8" r="4"/>
                         <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
                     </svg>
-
                 </div>
 
-                <span>Clínico</span>
+                <span>{{ nombre_completo|default:"Clínico" }}</span>
 
             </div>
 
@@ -146,23 +115,27 @@ Panel Clínico | WellQ
 
 
         <!-- ==================================================
-             CONTENIDO
+             CONTENIDO TARJETA
         =================================================== -->
 
         <section class="content-card">
 
-            <!-- TITULO -->
+            <!-- NOTIFICACIONES Y ALERTAS DE DJANGO -->
+            {% if messages %}
+                <div class="messages-container" style="margin-bottom: 20px;">
+                    {% for message in messages %}
+                        <div class="alert-msg {% if message.tags %}{{ message.tags }}{% else %}info{% endif %}" style="padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; {% if message.tags == 'error' %}background: rgba(255, 107, 107, 0.15); border: 1px solid rgba(255, 107, 107, 0.45); color: #ff8a8a;{% else %}background: rgba(46, 211, 154, .12); border: 1px solid rgba(79, 227, 174, .45); color: #4fe3ae;{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- TÍTULO -->
 
             <div class="page-header">
-
-                <h1>
-                    Documento de Pacientes
-                </h1>
-
-                <p>
-                    Consulte y gestione los documentos médicos de sus pacientes.
-                </p>
-
+                <h1>Documentos de Pacientes</h1>
+                <p>Consulte y gestione los documentos médicos de sus pacientes.</p>
             </div>
 
 
@@ -173,9 +146,7 @@ Panel Clínico | WellQ
             <div class="filters">
 
                 <!-- BUSCADOR -->
-
                 <div class="search-box">
-
                     <svg viewBox="0 0 24 24">
                         <circle cx="11" cy="11" r="7"/>
                         <path d="M16.5 16.5L21 21"/>
@@ -185,61 +156,27 @@ Panel Clínico | WellQ
                         type="text"
                         placeholder="Buscar por nombre, RUT o tipo de documento..."
                     >
-
                 </div>
-
 
                 <!-- TIPO DE DOCUMENTO -->
-
                 <div class="filter">
-
-                    <label>
-                        Tipo de documento
-                    </label>
-
+                    <label>Tipo de documento</label>
                     <select>
-
-                        <option value="">
-                            Todos
-                        </option>
-
-                        <option value="receta">
-                            Receta Médica
-                        </option>
-
-                        <option value="licencia">
-                            Licencia Médica
-                        </option>
-
+                        <option value="">Todos</option>
+                        <option value="receta">Receta Médica</option>
+                        <option value="licencia">Licencia Médica</option>
+                        <option value="examen">Examen Clínico</option>
                     </select>
-
                 </div>
 
-
                 <!-- ESTADO -->
-
                 <div class="filter">
-
-                    <label>
-                        Estado
-                    </label>
-
+                    <label>Estado</label>
                     <select>
-
-                        <option value="">
-                            Todos
-                        </option>
-
-                        <option value="disponible">
-                            Disponible
-                        </option>
-
-                        <option value="pendiente">
-                            Pendiente
-                        </option>
-
+                        <option value="">Todos</option>
+                        <option value="disponible">Disponible</option>
+                        <option value="pendiente">Pendiente</option>
                     </select>
-
                 </div>
 
             </div>
@@ -256,36 +193,15 @@ Panel Clínico | WellQ
                     <thead>
 
                         <tr>
-
-                            <th>
-                                Paciente
-                            </th>
-
-                            <th>
-                                RUT
-                            </th>
-
-                            <th>
-                                Tipo de Documento
-                            </th>
-
-                            <th>
-                                Fecha de Emisión
-                            </th>
-
-                            <th>
-                                Estado
-                            </th>
-
-                            <th>
-                                Acciones
-                            </th>
-
+                            <th>Paciente</th>
+                            <th>RUT</th>
+                            <th>Tipo / Título de Documento</th>
+                            <th>Fecha de Emisión</th>
+                            <th>Estado / Sesión</th>
+                            <th>Acciones</th>
                         </tr>
 
                     </thead>
-
-
                     <tbody>
 
                         {% for documento in documentos %}
@@ -293,130 +209,99 @@ Panel Clínico | WellQ
                         <tr>
 
                             <!-- PACIENTE -->
-
                             <td>
-
                                 <div class="patient">
-
                                     <div class="avatar">
-
                                         <svg viewBox="0 0 24 24">
                                             <circle cx="12" cy="8" r="4"/>
                                             <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
                                         </svg>
-
                                     </div>
-
                                     <span class="patient-name">
-                                        {{ documento.paciente }}
+                                        {% if documento.paciente_detail %}
+                                            {{ documento.paciente_detail.nombres }} {{ documento.paciente_detail.apellidos }}
+                                        {% elif documento.paciente.nombres %}
+                                            {{ documento.paciente.nombres }} {{ documento.paciente.apellidos }}
+                                        {% else %}
+                                            {{ documento.paciente|default:"Sin Paciente Asignado" }}
+                                        {% endif %}
                                     </span>
-
                                 </div>
-
                             </td>
-
 
                             <!-- RUT -->
-
                             <td>
-                                {{ documento.rut }}
+                                {% if documento.paciente_detail %}
+                                    {{ documento.paciente_detail.rut }}
+                                {% elif documento.paciente.rut %}
+                                    {{ documento.paciente.rut }}
+                                {% else %}
+                                    {{ documento.rut|default:"—" }}
+                                {% endif %}
                             </td>
 
-
-                            <!-- DOCUMENTO -->
-
+                            <!-- TÍTULO DEL DOCUMENTO -->
                             <td>
-                                {{ documento.tipo }}
+                                {{ documento.titulo|default:"Sin Título" }}
                             </td>
 
-
-                            <!-- FECHA -->
-
+                            <!-- FECHA DE EMISIÓN -->
                             <td>
-                                {{ documento.fecha }}
+                                {{ documento.fecha_subido }}
                             </td>
 
-
-                            <!-- ESTADO -->
-
+                            <!-- ESTADO / SESIÓN -->
                             <td>
-
                                 <span class="status">
-                                    {{ documento.estado }}
+                                    {{ documento.sesion|default:"Disponible" }}
                                 </span>
-
                             </td>
 
-
-                            <!-- ACCIONES -->
-
+                            <!-- ACCIONES DE LA TABLA -->
                             <td>
-
                                 <div class="actions">
+                                    {% if documento.archivo %}
+                                        <!-- VER DOCUMENTO -->
+                                        <a href="{{ documento.archivo }}" target="_blank" class="action-btn" title="Visualizar documento">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </a>
 
-                                    <!-- VER -->
+                                        <!-- DESCARGAR DOCUMENTO -->
+                                        <a href="{{ documento.archivo }}" download class="action-btn" title="Descargar documento">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M12 3v12"/>
+                                                <path d="M7.5 11l4.5 4.5 4.5-4.5"/>
+                                                <path d="M5 21h14"/>
+                                            </svg>
+                                        </a>
+                                    {% endif %}
 
-                                    <button
-                                        type="button"
-                                        class="action-btn"
-                                        title="Visualizar documento"
-                                    >
-
-                                        <svg viewBox="0 0 24 24">
-
-                                            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/>
-
-                                            <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="3"
-                                            />
-
-                                        </svg>
-
-                                    </button>
-
-
-                                    <!-- DESCARGAR -->
-
-                                    <button
-                                        type="button"
-                                        class="action-btn"
-                                        title="Descargar documento"
-                                    >
-
-                                        <svg viewBox="0 0 24 24">
-
-                                            <path d="M12 3v12"/>
-
-                                            <path d="M7.5 11l4.5 4.5 4.5-4.5"/>
-
-                                            <path d="M5 21h14"/>
-
-                                        </svg>
-
-                                    </button>
-
+                                    <!-- BOTÓN ELIMINAR (A LA DERECHA CON CONFIRMACIÓN PREVIA) -->
+                                    <form method="POST" action="{% url 'eliminar_examen' documento.id %}" style="display: inline;" onsubmit="return confirm('¿Está seguro de que desea eliminar este documento? Esta acción no se puede deshacer.');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-btn danger" title="Eliminar documento">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M4 7h16"/>
+                                                <path d="M9 7V4h6v3"/>
+                                                <path d="M7 7l1 14h8l1-14"/>
+                                                <path d="M10 11v6"/>
+                                                <path d="M14 11v6"/>
+                                            </svg>
+                                        </button>
+                                    </form>
                                 </div>
-
-                            </td>
-
+                        </td>
                         </tr>
-
 
                         {% empty %}
 
                         <tr>
-
-                            <td
-                                colspan="6"
-                                class="empty-table"
-                            >
-
+                            <td colspan="6" class="empty-table">
                                 No existen documentos disponibles.
-
                             </td>
-
                         </tr>
 
                         {% endfor %}
@@ -434,20 +319,11 @@ Panel Clínico | WellQ
 
             <div class="pagination">
 
-                <button type="button">
-                    ‹
-                </button>
+                <button type="button">‹</button>
 
-                <button
-                    type="button"
-                    class="page-active"
-                >
-                    1
-                </button>
+                <button type="button" class="page-active">1</button>
 
-                <button type="button">
-                    ›
-                </button>
+                <button type="button">›</button>
 
             </div>
 
@@ -1072,6 +948,8 @@ tbody tr:last-child td {
 
     background: #143848;
 
+    text-decoration: none;
+
     cursor: pointer;
 
     transition: .2s;
@@ -1246,4 +1124,4 @@ tbody tr:last-child td {
 
 </style>
 
-{% endblock %}  
+{% endblock %}
