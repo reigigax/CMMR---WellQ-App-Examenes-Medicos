@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 WellQ | Panel Paciente
@@ -6,11 +7,9 @@ WellQ | Panel Paciente
 
 {% block content %}
 
-{% load static %}
+<link rel="stylesheet" href="{% static 'css/paciente.css' %}?v=6">
+   
 
-<head>
-    <link rel="stylesheet" href="{% static 'css/paciente.css' %}">
-</head>
 
 <div class="patient-layout">
 
@@ -23,18 +22,9 @@ WellQ | Panel Paciente
 
         <nav class="menu">
 
-            <a href="{% url 'paciente' %}">
-                <span class="menu-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M3 11.5L12 4l9 7.5"/>
-                        <path d="M5 10v10h14V10"/>
-                        <path d="M9 20v-6h6v6"/>
-                    </svg>
-                </span>
-                <span>Inicio</span>
-            </a>
+           
 
-            <a href="{% url 'upload' %}" class="active">
+            <a href="{% url 'upload' %}">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M6 2h9l5 5v15H6z"/>
@@ -46,7 +36,7 @@ WellQ | Panel Paciente
                 <span>Subir documentos</span>
             </a>
 
-            <a href="{% url 'paciente' %}">
+            <a href="{% url 'paciente' %}" class="active">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M6 2h9l5 5v15H6z"/>
@@ -101,38 +91,103 @@ WellQ | Panel Paciente
                         </svg>
                     </div>
 
-                    <div>
-                        <strong>{{ saludo }}{% if nombre_completo %}, {{ nombre_completo }}{% endif %}</strong>
-                        <span>RUT: {{ rut }}</span>
-                        <span>Perfil: {{ user_type|title }}</span>
+                    <div class="wellq-patient-info">
+                        <strong class="wellq-patient-name">
+                            {{ saludo }}{% if nombre_completo %}, {{ nombre_completo }}{% endif %}
+                        </strong>
+
+                        <span class="wellq-patient-rut">
+                            RUT: {{ rut }}
+                        </span>
+
+                        <span class="wellq-patient-profile">
+                            Perfil: {{ user_type|title }}
+                        </span>
                     </div>
 
                 </div>
 
-                <div class="summary-card">
-                    <span class="summary-label">Estado de Cuenta</span>
-                    <strong>Activa</strong>
+                    <div class="wellq-header-detail">
+                        <span>Estado de Cuenta</span>
+                        <strong>Activa</strong>
+                    </div>
+
+                    <div class="wellq-header-detail">
+                        <span>Datos Protegidos</span>
+                        <strong>Sesión Segura</strong>
+                    </div>
+
                 </div>
 
-                <div class="summary-card protected">
-                    <span class="summary-label">Datos Protegidos</span>
-                    <strong>Sesión Segura</strong>
+        </header>
+
+        <section class="content-card wellq-main-content">
+
+            <!-- ALERTAS DE MENSAJES -->
+           {% if messages %}
+                {% for message in messages %}
+                    <div class="wellq-alert wellq-welcome">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Resumen de exámenes -->
+                <!-- TARJETAS DE RESUMEN -->
+            
+            <div class="wellq-stats">
+
+                <!-- TARJETA 1 -->
+                <div class="wellq-stat-card">
+                    <div class="wellq-stat-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 2h9l5 5v15H6z"/>
+                            <path d="M14 2v6h6"/>
+                            <path d="M9 13h6M9 17h6"/>
+                        </svg>
+                    </div>
+
+                    <div class="wellq-stat-info">
+                        <span class="stat-label">Exámenes registrados</span>
+                        <strong>{{ documentos|length }}</strong>
+                        <span class="stat-description">Documentos en tu cuenta</span>
+                    </div>
+                </div>
+
+                <!-- TARJETA 2 -->
+                <div class="wellq-stat-card">
+                    <div class="wellq-stat-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
+                        </svg>
+                    </div>
+
+                    <div class="wellq-stat-info">
+                        <span class="stat-label">Mi perfil</span>
+                        <strong>{{ user_type|title }}</strong>
+                        <span class="stat-description">Cuenta WellQ</span>
+                    </div>
+                </div>
+
+                <!-- TARJETA 3 -->
+                <div class="wellq-stat-card">
+                    <div class="wellq-stat-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 7h7l2 2h9v11H3z"/>
+                            <path d="M8 15l3 3 5-5"/>
+                        </svg>
+                    </div>
+
+                    <div class="wellq-stat-info">
+                        <span class="stat-label">Acceso a documentos</span>
+                        <strong>Mis archivos</strong>
+                        <span class="stat-description">Consulta tus exámenes</span>
+                    </div>
                 </div>
 
             </div>
 
-        </header>
-
-        <section class="content-card">
-
-            <!-- ALERTAS DE MENSAJES -->
-            {% if messages %}
-                {% for message in messages %}
-                    <p style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
-                        {{ message }}
-                    </p>
-                {% endfor %}
-            {% endif %}
 
             <div class="content-header">
 
@@ -155,99 +210,143 @@ WellQ | Panel Paciente
                 </a>
 
             </div>
+            
+            <div class="wellq-toolbar">
+                <div class="wellq-search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="10.5" cy="10.5" r="6.5"/>
+                        <path d="M16 16l5 5"/>
+                    </svg>
 
-            <div class="table-container">
+                    <input
+                        type="search"
+                        id="buscarExamen"
+                        placeholder="Buscar examen por nombre..."
+                        aria-label="Buscar examen por nombre"
+                    >
+                </div>
 
-                <table>
+                <button type="button" class="wellq-clear" id="limpiarBusqueda">
+                    Limpiar
+                </button>
+            </div>
 
-                    <thead>
-                        <tr>
-                            <th>ID Examen</th>
-                            <th>Título del Examen</th>
-                            <th>Sesión</th>
-                            <th>Fecha Subido</th>
-                            <th>Nota Clínica</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
+            <div class="wellq-toolbar">
+                  <!-- Tu buscador actual -->
+            </div>
 
-                    <tbody>
+            <div class="wellq-exams-area">
+                <div class="table-container">
 
-                        {% for doc in documentos %}
+                    <table>
 
-                        <tr>
+                        <thead>
+                            <tr>
+                                <th>ID Examen</th>
+                                <th>Título del Examen</th>
+                                <th>Sesión</th>
+                                <th>Fecha Subido</th>
+                                <th>Nota Clínica</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
 
-                            <td>
-                                <strong>#{{ doc.id }}</strong>
-                            </td>
+                        <tbody>
 
-                            <td>
+                            {% for doc in documentos %}
 
-                                <div class="doc-name">
+                            <tr data-documento="{{ doc.titulo }}">
 
-                                    <div class="doc-icon">
-                                        <svg viewBox="0 0 24 24">
-                                            <path d="M6 2h9l5 5v15H6z"/>
-                                            <path d="M14 2v6h6"/>
-                                        </svg>
+                                <td>
+                                    <strong>#{{ doc.id }}</strong>
+                                </td>
+
+                                <td>
+
+                                    <div class="doc-name">
+
+                                        <div class="doc-icon">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M6 2h9l5 5v15H6z"/>
+                                                <path d="M14 2v6h6"/>
+                                            </svg>
+                                        </div>
+
+                                        <span>
+                                            {{ doc.titulo }}
+                                        </span>
+
                                     </div>
 
-                                    <span>
-                                        {{ doc.titulo }}
-                                    </span>
+                                </td>
 
-                                </div>
+                                <td>
+                                    {{ doc.sesion }}
+                                </td>
 
-                            </td>
+                                <td>
+                                    {{ doc.fecha_subido }}
+                                </td>
 
-                            <td>
-                                {{ doc.sesion }}
-                            </td>
+                                <td>
+                                    {{ doc.nota_clinica|default:"Sin observaciones" }}
+                                </td>
 
-                            <td>
-                                {{ doc.fecha_subido }}
-                            </td>
+                                <td>
 
-                            <td>
-                                {{ doc.nota_clinica|default:"Sin observaciones" }}
-                            </td>
+                                    <div class="actions">
 
-                            <td>
+                                        {% if doc.archivo %}
+                                            <a href="{{ doc.archivo }}" target="_blank" class="action-btn" title="Ver / Descargar">
+                                                <svg viewBox="0 0 24 24">
+                                                    <path d="M12 3v12"/>
+                                                    <path d="M7.5 11l4.5 4.5 4.5-4.5"/>
+                                                    <path d="M5 21h14"/>
+                                                </svg>
+                                            </a>
+                                        {% else %}
+                                            <span style="font-size: 0.8rem; color: #888;">No adjunto</span>
+                                        {% endif %}
 
-                                <div class="actions">
+                                    </div>
 
-                                    {% if doc.archivo %}
-                                        <a href="{{ doc.archivo }}" target="_blank" class="action-btn" title="Ver / Descargar">
-                                            <svg viewBox="0 0 24 24">
-                                                <path d="M12 3v12"/>
-                                                <path d="M7.5 11l4.5 4.5 4.5-4.5"/>
-                                                <path d="M5 21h14"/>
-                                            </svg>
-                                        </a>
-                                    {% else %}
-                                        <span style="font-size: 0.8rem; color: #888;">No adjunto</span>
-                                    {% endif %}
+                                </td>
 
-                                </div>
+                            </tr>
 
-                            </td>
+                            {% empty %}
 
-                        </tr>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 20px; color: #888;">
+                                    No se encontraron exámenes o documentos registrados para esta cuenta.
+                                </td>
+                            </tr>
 
-                        {% empty %}
+                            {% endfor %}
 
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 20px; color: #888;">
-                                No se encontraron exámenes o documentos registrados para esta cuenta.
-                            </td>
-                        </tr>
+                        </tbody>
 
-                        {% endfor %}
+                    </table>
 
-                    </tbody>
+                </div>
 
-                </table>
+                    <div class="wellq-pagination" id="wellqPagination">
+                        <span id="wellqPageInfo">Mostrando 0 de 0 exámenes</span>
 
+                        <div class="wellq-pagination-controls">
+                            <button type="button" id="wellqPrevPage">
+                                &#8249; Anterior
+                            </button>
+
+                            <span id="wellqPageNumbers"></span>
+
+                            <button type="button" id="wellqNextPage">
+                                Siguiente &#8250;
+                            </button>
+                        </div>
+                    </div>
+
+                   
             </div>
 
         </section>
@@ -255,5 +354,135 @@ WellQ | Panel Paciente
     </main>
 
 </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const buscador = document.getElementById("buscarExamen");
+    const limpiar = document.getElementById("limpiarBusqueda");
+    const filas = document.querySelectorAll(
+        ".table-container tbody tr[data-documento]"
+    );
+
+    if (!buscador || !limpiar) return;
+
+    function filtrar() {
+        const texto = buscador.value
+            .toLocaleLowerCase("es")
+            .trim();
+
+        filas.forEach(function (fila) {
+            const nombre = (fila.dataset.documento || "")
+                .toLocaleLowerCase("es");
+
+            fila.hidden = !nombre.includes(texto);
+        });
+    }
+
+    buscador.addEventListener("input", filtrar);
+
+    limpiar.addEventListener("click", function () {
+        buscador.value = "";
+        filtrar();
+        buscador.focus();
+    });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const table = document.querySelector(".table-container table");
+    if (!table) return;
+
+    const rows = Array.from(table.querySelectorAll("tbody tr"))
+        .filter(row => row.querySelector("td"));
+
+    const searchInput = document.querySelector(".wellq-search input");
+    const prevButton = document.getElementById("wellqPrevPage");
+    const nextButton = document.getElementById("wellqNextPage");
+    const pageNumbers = document.getElementById("wellqPageNumbers");
+    const pageInfo = document.getElementById("wellqPageInfo");
+
+    const pageSize = 10;
+    let currentPage = 1;
+
+    function getFilteredRows() {
+        const query = (searchInput?.value || "")
+            .toLocaleLowerCase()
+            .trim();
+
+        return rows.filter(row =>
+            row.textContent.toLocaleLowerCase().includes(query)
+        );
+    }
+
+    function renderPagination() {
+        const filteredRows = getFilteredRows();
+        const total = filteredRows.length;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+        currentPage = Math.min(currentPage, totalPages);
+
+        rows.forEach(row => {
+            row.style.display = "none";
+        });
+
+        const start = (currentPage - 1) * pageSize;
+        const visibleRows = filteredRows.slice(start, start + pageSize);
+
+        visibleRows.forEach(row => {
+            row.style.display = "";
+        });
+
+        const first = total === 0 ? 0 : start + 1;
+        const last = Math.min(start + pageSize, total);
+
+        pageInfo.textContent =
+            `Mostrando ${first}-${last} de ${total} exámenes`;
+
+        pageNumbers.innerHTML = "";
+
+        for (let page = 1; page <= totalPages; page++) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = page;
+
+            if (page === currentPage) {
+                button.classList.add("active");
+            }
+
+            button.addEventListener("click", () => {
+                currentPage = page;
+                renderPagination();
+            });
+
+            pageNumbers.appendChild(button);
+        }
+
+        prevButton.disabled = currentPage === 1;
+        nextButton.disabled = currentPage === totalPages;
+    }
+
+    prevButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPagination();
+        }
+    });
+
+    nextButton.addEventListener("click", () => {
+        currentPage++;
+        renderPagination();
+    });
+
+    searchInput?.addEventListener("input", () => {
+        currentPage = 1;
+        renderPagination();
+    });
+
+    renderPagination();
+});
+</script>
+
 
 {% endblock %}
