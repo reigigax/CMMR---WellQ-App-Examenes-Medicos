@@ -1,9 +1,12 @@
 import requests
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from functools import wraps
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
 API_BASE_URL = "http://127.0.0.1:8000/api/v1"
+ZONA_CHILE = ZoneInfo("America/Santiago")
 
 
 # ------------------------------------------------------------------
@@ -198,6 +201,23 @@ def sign_up(request):
 
 
 # ------------------------------------------------------------------
+# Saludo personalizado
+# ------------------------------------------------------------------
+def saludo_actual(request):
+    """
+    Devuelve el saludo según la hora de Chile (America/Santiago):
+    "Buenos días", "Buenas tardes" o "Buenas noches".
+    """
+    hora = datetime.now(ZONA_CHILE).hour
+
+    if 6 <= hora < 12:
+        return "Buenos días"
+    if 12 <= hora < 20:
+        return "Buenas tardes"
+    return "Buenas noches"
+
+
+# ------------------------------------------------------------------
 # Vistas Protegidas
 # ------------------------------------------------------------------
 @jwt_required
@@ -273,7 +293,8 @@ def paciente(request):
         "nombre_completo": request.session.get('nombre_completo', 'Paciente'),
         "rut": request.session.get('rut', 'Sin RUT registrado'),
         "user_type": request.session.get('user_type'),
-        "documentos": documentos
+        "documentos": documentos,
+        "saludo": saludo_actual(request)
     }
 
     return render(request, "exams_manager/paciente.html", context)

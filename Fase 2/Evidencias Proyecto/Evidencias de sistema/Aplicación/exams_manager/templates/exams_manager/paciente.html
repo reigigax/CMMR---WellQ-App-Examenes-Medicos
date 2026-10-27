@@ -102,7 +102,7 @@ WellQ | Panel Paciente
                     </div>
 
                     <div>
-                        <strong>{{ nombre_completo }}</strong>
+                        <strong>{{ saludo }}{% if nombre_completo %}, {{ nombre_completo }}{% endif %}</strong>
                         <span>RUT: {{ rut }}</span>
                         <span>Perfil: {{ user_type|title }}</span>
                     </div>
