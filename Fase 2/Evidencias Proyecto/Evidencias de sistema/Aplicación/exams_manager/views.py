@@ -257,6 +257,7 @@ def upload(request):
 
     response = api_request(request, 'GET', '/examenes/')
     documentos = response.json() if (response and response.status_code == 200) else []
+   
 
     context = {
         "nombre_completo": request.session.get('nombre_completo', 'Usuario'),
