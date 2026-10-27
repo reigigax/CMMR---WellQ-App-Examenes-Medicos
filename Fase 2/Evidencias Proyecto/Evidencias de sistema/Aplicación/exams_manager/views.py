@@ -149,7 +149,7 @@ def login(request):
 
 def logout_view(request):
     request.session.flush()
-    messages.info(request, "Has cerrado sesiÃ³n correctamente.")
+    messages.info(request, "Has cerrado sesión correctamente.")
     return redirect('login')
 
 
