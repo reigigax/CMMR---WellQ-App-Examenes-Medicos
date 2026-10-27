@@ -7,11 +7,9 @@ WellQ | Subir Documentos
 {% block content %}
 
 {% load static %}
-
-<head>
-    <link rel="stylesheet" href="{% static 'css/upload.css' %}?v=3">
-</head>
-
+<link rel="stylesheet" href="{% static 'css/clinico.css' %}">
+<link rel="stylesheet" href="{% static 'css/upload.css' %}">
+<link rel="stylesheet" href="{% static 'css/wellq-global.css' %}">
 <div class="upload-layout">
 
     <aside class="sidebar">
@@ -79,45 +77,7 @@ WellQ | Subir Documentos
 
     <main class="main-content">
 
-        <header class="topbar topbar-expanded">
-
-            <div class="topbar-user">
-                <div class="topbar-avatar">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="12" cy="8" r="4"></circle>
-                        <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"></path>
-                    </svg>
-                </div>
-
-                <div class="topbar-user-details">
-                    <strong>{{ nombre_completo }}</strong>
-                    <span>RUT: {{ rut }}</span>
-                    <span>
-                        Perfil:
-                        {% if user_type == 'clinico' %}
-                            Clínico
-                        {% else %}
-                            Paciente
-                        {% endif %}
-                    </span>
-                </div>
-            </div>
-
-            <div class="topbar-indicators">
-
-                <div class="topbar-indicator">
-                    <span>Estado de cuenta</span>
-                    <strong>Activa</strong>
-                </div>
-
-                <div class="topbar-indicator">
-                    <span>Datos protegidos</span>
-                    <strong>Sesión segura</strong>
-                </div>
-
-            </div>
-
-        </header>
+       {% include "exams_manager/includes/wellq_header.html" %}
 
         <section class="content-card">
 

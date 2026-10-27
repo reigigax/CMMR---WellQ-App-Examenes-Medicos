@@ -1,18 +1,440 @@
+
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}
-WellQ | Panel Paciente
-{% endblock %}
+{% block title %}WellQ | Mis archivos{% endblock %}
 
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'css/paciente.css' %}?v=6">
-   
+<link rel="stylesheet" href="{% static 'css/wellq-global.css' %}">
+<link rel="stylesheet" href="{% static 'css/clinico.css' %}">
+<link rel="stylesheet" href="{% static 'css/paciente.css' %}">
 
+<style>
+/* Ajustes exclusivos de Mis archivos */
+.patient-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: #ffffff;
+}
+
+.patient-layout,
+.patient-layout * {
+    box-sizing: border-box;
+}
+
+.patient-layout .sidebar {
+    width: 280px;
+    min-width: 280px;
+    flex-shrink: 0;
+    background: #031927;
+    border-right: 1px solid #285064;
+}
+
+.patient-layout .brand {
+    height: 82px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 16px;
+    border-bottom: 1px solid #285064;
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.patient-layout .brand-circle {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00e5cc, #008eff);
+    border: 1px solid #00e5ff;
+}
+
+.patient-layout .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 5px;
+}
+
+.patient-layout .menu a {
+    min-height: 65px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.patient-layout .menu a.active {
+    background: #003149;
+    border-left: 3px solid #00cfff;
+    font-weight: 700;
+}
+
+.patient-layout .menu-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.patient-layout .menu-icon svg {
+    width: 23px !important;
+    height: 23px !important;
+    max-width: 23px;
+    max-height: 23px;
+    display: block;
+    fill: none;
+    stroke: #00d9ff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.patient-layout .main-content {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    background: #071824;
+}
+
+.patient-layout .content-card {
+    margin: 24px;
+    padding: 30px;
+    border: 1px solid #1b6079;
+    border-radius: 14px;
+    background: #002838;
+    max-width: none;
+    width: auto;
+}
+
+.patient-layout .wellq-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 34px;
+}
+
+.patient-layout .wellq-stat-card {
+    min-width: 0;
+    min-height: 152px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    border: 1px solid #17617e;
+    border-top: 3px solid #00cfff;
+    border-radius: 12px;
+    background: #002c43;
+}
+
+.patient-layout .wellq-stat-icon {
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px;
+    min-height: 58px;
+    max-width: 58px;
+    max-height: 58px;
+    flex: 0 0 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #00415a;
+}
+
+.patient-layout .wellq-stat-icon svg {
+    display: block;
+    width: 27px !important;
+    height: 27px !important;
+    max-width: 27px;
+    max-height: 27px;
+    fill: none !important;
+    stroke: #00d9ff !important;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.patient-layout .wellq-stat-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.patient-layout .stat-label,
+.patient-layout .stat-description {
+    color: #8bdcff;
+    font-size: 14px;
+}
+
+.patient-layout .wellq-stat-info strong {
+    color: #ffffff;
+    font-size: 27px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.patient-layout .content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 34px;
+}
+
+.patient-layout .content-header h1 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 28px;
+    line-height: 1.25;
+}
+
+.patient-layout .content-header p {
+    margin: 0;
+    color: #8bdcff;
+    font-size: 15px;
+}
+
+.patient-layout .upload-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 13px 18px;
+    border: 1px solid #00d9ff;
+    border-radius: 8px;
+    background: linear-gradient(120deg, #00bfe7, #3568f5);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.patient-layout .upload-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.patient-layout .wellq-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.patient-layout .wellq-search {
+    flex: 1;
+    min-width: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    border: 1px solid #236985;
+    border-radius: 9px;
+    background: #003149;
+}
+
+.patient-layout .wellq-search svg {
+    width: 20px !important;
+    height: 20px !important;
+    flex-shrink: 0;
+    fill: none;
+    stroke: #83d9f8;
+    stroke-width: 1.8;
+}
+
+.patient-layout .wellq-search input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+    font-size: 15px;
+}
+
+.patient-layout .wellq-search input::placeholder {
+    color: #78bfe0;
+}
+
+.patient-layout .wellq-clear {
+    min-height: 50px;
+    padding: 0 22px;
+    border: 1px solid #236985;
+    border-radius: 9px;
+    background: #003149;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.patient-layout .table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #236985;
+    border-radius: 10px;
+}
+
+.patient-layout .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.patient-layout .table-container th {
+    padding: 17px 14px;
+    text-align: left;
+    background: #00384e;
+    border-bottom: 1px solid #236985;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.patient-layout .table-container td {
+    padding: 20px 14px;
+    border-bottom: 1px solid #17475b;
+    color: #b6e5f6;
+}
+
+.patient-layout .doc-name,
+.patient-layout .actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.patient-layout .doc-icon,
+.patient-layout .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    background: #00415a;
+}
+
+.patient-layout .doc-icon svg,
+.patient-layout .action-btn svg {
+    width: 19px !important;
+    height: 19px !important;
+    fill: none !important;
+    stroke: #00d9ff !important;
+    stroke-width: 1.8;
+}
+
+.patient-layout .wellq-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 14px;
+    padding: 16px 20px;
+    border: 1px solid #17617e;
+    border-radius: 10px;
+    background: #002c43;
+    color: #9bdef7;
+    font-size: 14px;
+}
+
+.patient-layout .wellq-pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.patient-layout .wellq-pagination button {
+    min-height: 36px;
+    padding: 7px 12px;
+    border: 1px solid #17617e;
+    border-radius: 7px;
+    background: #003149;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.patient-layout .wellq-pagination button.active {
+    background: linear-gradient(120deg, #00bfe7, #3568f5);
+    border-color: #00d9ff;
+}
+
+.patient-layout .wellq-pagination button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.patient-layout .wellq-alert {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border: 1px solid #00bca9;
+    border-radius: 8px;
+    background: #00423f;
+    color: #00efca;
+    text-align: center;
+}
+
+@media (max-width: 1100px) {
+    .patient-layout .wellq-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .patient-layout {
+        flex-direction: column;
+    }
+
+    .patient-layout .sidebar {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .patient-layout .main-content {
+        width: 100%;
+    }
+
+    .patient-layout .content-card {
+        margin: 14px;
+        padding: 18px;
+    }
+
+    .patient-layout .content-header,
+    .patient-layout .wellq-toolbar,
+    .patient-layout .wellq-pagination {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+</style>
 
 <div class="patient-layout">
 
+    <!-- MENÚ LATERAL -->
     <aside class="sidebar">
 
         <div class="brand">
@@ -21,8 +443,6 @@ WellQ | Panel Paciente
         </div>
 
         <nav class="menu">
-
-           
 
             <a href="{% url 'upload' %}">
                 <span class="menu-icon">
@@ -47,7 +467,7 @@ WellQ | Panel Paciente
                 </span>
                 <span>Mis archivos</span>
             </a>
-            
+
             {% if user_type == 'clinico' %}
             <a href="{% url 'clinico' %}">
                 <span class="menu-icon">
@@ -61,86 +481,40 @@ WellQ | Panel Paciente
                 <span>Pacientes</span>
             </a>
             {% endif %}
-            
 
-            <!-- CERRAR SESIÓN -->
             <a href="{% url 'logout' %}">
                 <span class="menu-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
                 </span>
-                <span class="menu-text">Cerrar Sesión</span>
+                <span>Cerrar Sesión</span>
             </a>
 
         </nav>
     </aside>
 
+    <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
 
-        <header class="topbar">
-
-            <div class="patient-summary">
-
-                <div class="summary-user">
-
-                    <div class="profile-icon">
-                        <svg viewBox="0 0 24 24">
-                            <circle cx="12" cy="8" r="4"/>
-                            <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
-                        </svg>
-                    </div>
-
-                    <div class="wellq-patient-info">
-                        <strong class="wellq-patient-name">
-                            {{ saludo }}{% if nombre_completo %}, {{ nombre_completo }}{% endif %}
-                        </strong>
-
-                        <span class="wellq-patient-rut">
-                            RUT: {{ rut }}
-                        </span>
-
-                        <span class="wellq-patient-profile">
-                            Perfil: {{ user_type|title }}
-                        </span>
-                    </div>
-
-                </div>
-
-                    <div class="wellq-header-detail">
-                        <span>Estado de Cuenta</span>
-                        <strong>Activa</strong>
-                    </div>
-
-                    <div class="wellq-header-detail">
-                        <span>Datos Protegidos</span>
-                        <strong>Sesión Segura</strong>
-                    </div>
-
-                </div>
-
-        </header>
+        {% include "exams_manager/includes/wellq_header.html" %}
 
         <section class="content-card wellq-main-content">
 
-            <!-- ALERTAS DE MENSAJES -->
-           {% if messages %}
+            {% if messages %}
                 {% for message in messages %}
-                    <div class="wellq-alert wellq-welcome">
+                    <div class="wellq-alert">
                         {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
 
-            <!-- Resumen de exámenes -->
-                <!-- TARJETAS DE RESUMEN -->
-            
+            <!-- TARJETAS -->
             <div class="wellq-stats">
 
-                <!-- TARJETA 1 -->
                 <div class="wellq-stat-card">
                     <div class="wellq-stat-icon">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
                             <path d="M6 2h9l5 5v15H6z"/>
                             <path d="M14 2v6h6"/>
                             <path d="M9 13h6M9 17h6"/>
@@ -154,10 +528,9 @@ WellQ | Panel Paciente
                     </div>
                 </div>
 
-                <!-- TARJETA 2 -->
                 <div class="wellq-stat-card">
                     <div class="wellq-stat-icon">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
                             <circle cx="12" cy="8" r="4"/>
                             <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
                         </svg>
@@ -170,10 +543,9 @@ WellQ | Panel Paciente
                     </div>
                 </div>
 
-                <!-- TARJETA 3 -->
                 <div class="wellq-stat-card">
                     <div class="wellq-stat-icon">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
                             <path d="M3 7h7l2 2h9v11H3z"/>
                             <path d="M8 15l3 3 5-5"/>
                         </svg>
@@ -188,9 +560,8 @@ WellQ | Panel Paciente
 
             </div>
 
-
+            <!-- TÍTULO -->
             <div class="content-header">
-
                 <div>
                     <h1>Mis Exámenes Médicos</h1>
                     <p>
@@ -198,22 +569,21 @@ WellQ | Panel Paciente
                     </p>
                 </div>
 
-                <a href="{% url 'upload' %}">
-                    <button class="upload-btn">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 16V4"/>
-                            <path d="M7.5 8.5L12 4l4.5 4.5"/>
-                            <path d="M5 20h14"/>
-                        </svg>
-                        Subir documento
-                    </button>
+                <a href="{% url 'upload' %}" class="upload-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 16V4"/>
+                        <path d="M7.5 8.5L12 4l4.5 4.5"/>
+                        <path d="M5 20h14"/>
+                    </svg>
+                    Subir documento
                 </a>
-
             </div>
-            
+
+            <!-- BUSCADOR -->
             <div class="wellq-toolbar">
+
                 <div class="wellq-search">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
                         <circle cx="10.5" cy="10.5" r="6.5"/>
                         <path d="M16 16l5 5"/>
                     </svg>
@@ -226,20 +596,19 @@ WellQ | Panel Paciente
                     >
                 </div>
 
-                <button type="button" class="wellq-clear" id="limpiarBusqueda">
+                <button type="button"
+                        class="wellq-clear"
+                        id="limpiarBusqueda">
                     Limpiar
                 </button>
+
             </div>
 
-            <div class="wellq-toolbar">
-                  <!-- Tu buscador actual -->
-            </div>
-
+            <!-- TABLA -->
             <div class="wellq-exams-area">
+
                 <div class="table-container">
-
                     <table>
-
                         <thead>
                             <tr>
                                 <th>ID Examen</th>
@@ -252,52 +621,40 @@ WellQ | Panel Paciente
                         </thead>
 
                         <tbody>
-
                             {% for doc in documentos %}
 
                             <tr data-documento="{{ doc.titulo }}">
-
                                 <td>
                                     <strong>#{{ doc.id }}</strong>
                                 </td>
 
                                 <td>
-
                                     <div class="doc-name">
-
                                         <div class="doc-icon">
                                             <svg viewBox="0 0 24 24">
                                                 <path d="M6 2h9l5 5v15H6z"/>
                                                 <path d="M14 2v6h6"/>
                                             </svg>
                                         </div>
-
-                                        <span>
-                                            {{ doc.titulo }}
-                                        </span>
-
+                                        <span>{{ doc.titulo }}</span>
                                     </div>
-
                                 </td>
 
-                                <td>
-                                    {{ doc.sesion }}
-                                </td>
-
-                                <td>
-                                    {{ doc.fecha_subido }}
-                                </td>
+                                <td>{{ doc.sesion }}</td>
+                                <td>{{ doc.fecha_subido }}</td>
 
                                 <td>
                                     {{ doc.nota_clinica|default:"Sin observaciones" }}
                                 </td>
 
                                 <td>
-
                                     <div class="actions">
-
                                         {% if doc.archivo %}
-                                            <a href="{{ doc.archivo }}" target="_blank" class="action-btn" title="Ver / Descargar">
+                                            <a href="{{ doc.archivo }}"
+                                               target="_blank"
+                                               rel="noopener noreferrer"
+                                               class="action-btn"
+                                               title="Ver o descargar">
                                                 <svg viewBox="0 0 24 24">
                                                     <path d="M12 3v12"/>
                                                     <path d="M7.5 11l4.5 4.5 4.5-4.5"/>
@@ -305,119 +662,91 @@ WellQ | Panel Paciente
                                                 </svg>
                                             </a>
                                         {% else %}
-                                            <span style="font-size: 0.8rem; color: #888;">No adjunto</span>
+                                            <span>No adjunto</span>
                                         {% endif %}
-
                                     </div>
-
                                 </td>
-
                             </tr>
 
                             {% empty %}
 
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 20px; color: #888;">
+                            <tr class="empty-row">
+                                <td colspan="6" style="text-align:center; padding:25px;">
                                     No se encontraron exámenes o documentos registrados para esta cuenta.
                                 </td>
                             </tr>
 
                             {% endfor %}
-
                         </tbody>
-
                     </table>
-
                 </div>
 
-                    <div class="wellq-pagination" id="wellqPagination">
-                        <span id="wellqPageInfo">Mostrando 0 de 0 exámenes</span>
+                <!-- PAGINACIÓN -->
+                <div class="wellq-pagination" id="wellqPagination">
 
-                        <div class="wellq-pagination-controls">
-                            <button type="button" id="wellqPrevPage">
-                                &#8249; Anterior
-                            </button>
+                    <span id="wellqPageInfo">
+                        Mostrando 0 de 0 exámenes
+                    </span>
 
-                            <span id="wellqPageNumbers"></span>
+                    <div class="wellq-pagination-controls">
 
-                            <button type="button" id="wellqNextPage">
-                                Siguiente &#8250;
-                            </button>
-                        </div>
+                        <button type="button" id="wellqPrevPage">
+                            &#8249; Anterior
+                        </button>
+
+                        <span id="wellqPageNumbers"></span>
+
+                        <button type="button" id="wellqNextPage">
+                            Siguiente &#8250;
+                        </button>
+
                     </div>
+                </div>
 
-                   
             </div>
 
         </section>
-
     </main>
-
 </div>
 
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const buscador = document.getElementById("buscarExamen");
-    const limpiar = document.getElementById("limpiarBusqueda");
-    const filas = document.querySelectorAll(
-        ".table-container tbody tr[data-documento]"
+
+    const table = document.querySelector(
+        ".patient-layout .table-container table"
     );
 
-    if (!buscador || !limpiar) return;
-
-    function filtrar() {
-        const texto = buscador.value
-            .toLocaleLowerCase("es")
-            .trim();
-
-        filas.forEach(function (fila) {
-            const nombre = (fila.dataset.documento || "")
-                .toLocaleLowerCase("es");
-
-            fila.hidden = !nombre.includes(texto);
-        });
-    }
-
-    buscador.addEventListener("input", filtrar);
-
-    limpiar.addEventListener("click", function () {
-        buscador.value = "";
-        filtrar();
-        buscador.focus();
-    });
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const table = document.querySelector(".table-container table");
     if (!table) return;
 
-    const rows = Array.from(table.querySelectorAll("tbody tr"))
-        .filter(row => row.querySelector("td"));
+    const rows = Array.from(
+        table.querySelectorAll("tbody tr[data-documento]")
+    );
 
-    const searchInput = document.querySelector(".wellq-search input");
+    const emptyRow = table.querySelector(".empty-row");
+
+    const searchInput = document.getElementById("buscarExamen");
+    const clearButton = document.getElementById("limpiarBusqueda");
     const prevButton = document.getElementById("wellqPrevPage");
     const nextButton = document.getElementById("wellqNextPage");
     const pageNumbers = document.getElementById("wellqPageNumbers");
     const pageInfo = document.getElementById("wellqPageInfo");
 
+    if (!prevButton || !nextButton || !pageNumbers || !pageInfo) {
+        return;
+    }
+
     const pageSize = 10;
     let currentPage = 1;
 
-    function getFilteredRows() {
+    function render() {
         const query = (searchInput?.value || "")
-            .toLocaleLowerCase()
+            .toLocaleLowerCase("es")
             .trim();
 
-        return rows.filter(row =>
-            row.textContent.toLocaleLowerCase().includes(query)
+        const filteredRows = rows.filter(row =>
+            row.textContent.toLocaleLowerCase("es").includes(query)
         );
-    }
 
-    function renderPagination() {
-        const filteredRows = getFilteredRows();
         const total = filteredRows.length;
         const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -428,11 +757,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const start = (currentPage - 1) * pageSize;
-        const visibleRows = filteredRows.slice(start, start + pageSize);
 
-        visibleRows.forEach(row => {
+        filteredRows.slice(start, start + pageSize).forEach(row => {
             row.style.display = "";
         });
+
+        if (emptyRow) {
+            emptyRow.style.display = total === 0 ? "" : "none";
+        }
 
         const first = total === 0 ? 0 : start + 1;
         const last = Math.min(start + pageSize, total);
@@ -442,47 +774,59 @@ document.addEventListener("DOMContentLoaded", function () {
 
         pageNumbers.innerHTML = "";
 
-        for (let page = 1; page <= totalPages; page++) {
-            const button = document.createElement("button");
-            button.type = "button";
-            button.textContent = page;
+        if (total > 0) {
+            for (let page = 1; page <= totalPages; page++) {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.textContent = page;
 
-            if (page === currentPage) {
-                button.classList.add("active");
+                if (page === currentPage) {
+                    button.classList.add("active");
+                }
+
+                button.addEventListener("click", () => {
+                    currentPage = page;
+                    render();
+                });
+
+                pageNumbers.appendChild(button);
             }
-
-            button.addEventListener("click", () => {
-                currentPage = page;
-                renderPagination();
-            });
-
-            pageNumbers.appendChild(button);
         }
 
         prevButton.disabled = currentPage === 1;
-        nextButton.disabled = currentPage === totalPages;
+        nextButton.disabled = total === 0 || currentPage === totalPages;
     }
+
+    searchInput?.addEventListener("input", () => {
+        currentPage = 1;
+        render();
+    });
+
+    clearButton?.addEventListener("click", () => {
+        if (searchInput) {
+            searchInput.value = "";
+            searchInput.focus();
+        }
+        currentPage = 1;
+        render();
+    });
 
     prevButton.addEventListener("click", () => {
         if (currentPage > 1) {
             currentPage--;
-            renderPagination();
+            render();
         }
     });
 
     nextButton.addEventListener("click", () => {
-        currentPage++;
-        renderPagination();
+        if (!nextButton.disabled) {
+            currentPage++;
+            render();
+        }
     });
 
-    searchInput?.addEventListener("input", () => {
-        currentPage = 1;
-        renderPagination();
-    });
-
-    renderPagination();
+    render();
 });
 </script>
-
 
 {% endblock %}

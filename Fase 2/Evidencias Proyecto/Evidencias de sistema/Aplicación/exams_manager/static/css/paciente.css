@@ -2280,3 +2280,277 @@ tbody tr:hover {
     gap: 16px;
 }
 
+
+/* ==========================================
+   WELLQ - MIS ARCHIVOS
+   ========================================== */
+
+/* Contenedor principal */
+.patient-layout .wellq-main-content {
+    padding: 28px 30px;
+    overflow: hidden;
+}
+
+/* Todos los iconos SVG del contenido */
+.patient-layout .main-content svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #18d5f3;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+/* Tarjetas de resumen */
+.patient-layout .wellq-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.patient-layout .wellq-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+    padding: 20px;
+    background: #10394b;
+    border: 1px solid #315f73;
+    border-radius: 12px;
+}
+
+.patient-layout .wellq-stat-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #0b3044;
+    border: 1px solid #28667e;
+    border-radius: 12px;
+}
+
+.patient-layout .wellq-stat-icon svg {
+    width: 25px;
+    height: 25px;
+}
+
+.patient-layout .wellq-stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.patient-layout .stat-label {
+    color: #9ed7eb;
+    font-size: 12px;
+}
+
+.patient-layout .wellq-stat-info strong {
+    color: #ffffff;
+    font-size: 22px;
+}
+
+.patient-layout .stat-description {
+    color: #8bb9ca;
+    font-size: 12px;
+}
+
+/* Encabezado de sección */
+.patient-layout .content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.patient-layout .content-header h1 {
+    margin: 0 0 7px;
+    color: #ffffff;
+    font-size: 26px;
+}
+
+.patient-layout .content-header p {
+    margin: 0;
+    color: #9acde1;
+    font-size: 14px;
+}
+
+.patient-layout .upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 17px;
+    background: linear-gradient(135deg, #12b9e8, #168af0);
+    color: #ffffff;
+    border: 1px solid #4be1ff;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.patient-layout .content-header a {
+    text-decoration: none;
+}
+
+/* Buscador */
+.patient-layout .wellq-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.patient-layout .wellq-toolbar:empty {
+    display: none;
+}
+
+.patient-layout .wellq-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 520px;
+    height: 46px;
+    padding: 0 14px;
+    background: #12394c;
+    border: 1px solid #426f83;
+    border-radius: 9px;
+}
+
+.patient-layout .wellq-search input {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.patient-layout .wellq-search input::placeholder {
+    color: #8db9cd;
+}
+
+.patient-layout .wellq-clear {
+    height: 46px;
+    padding: 0 20px;
+    background: #12394c;
+    color: #ffffff;
+    border: 1px solid #426f83;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+/* Tabla */
+.patient-layout .wellq-exams-area {
+    width: 100%;
+    min-width: 0;
+}
+
+.patient-layout .table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #37677d;
+    border-radius: 10px;
+}
+
+.patient-layout .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.patient-layout .table-container th {
+    padding: 15px;
+    background: #103d50;
+    color: #e1f4fc;
+    font-size: 12px;
+    text-align: left;
+}
+
+.patient-layout .table-container td {
+    padding: 17px 15px;
+    color: #eaf5fa;
+    font-size: 13px;
+    border-top: 1px solid #315064;
+}
+
+.patient-layout .doc-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.patient-layout .doc-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Paginación */
+.patient-layout .wellq-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 20px;
+    color: #9acde1;
+    font-size: 13px;
+}
+
+.patient-layout .wellq-pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.patient-layout .wellq-pagination button {
+    min-height: 36px;
+    padding: 0 12px;
+    background: #12394c;
+    border: 1px solid #426f83;
+    border-radius: 7px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.patient-layout .wellq-pagination button.active {
+    background: #168af0;
+    border-color: #25d4f4;
+}
+
+.patient-layout .wellq-pagination button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Adaptación */
+@media (max-width: 1050px) {
+    .patient-layout .wellq-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .patient-layout .wellq-main-content {
+        padding: 18px;
+    }
+
+    .patient-layout .wellq-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .patient-layout .wellq-search {
+        max-width: none;
+        flex-basis: 100%;
+    }
+}

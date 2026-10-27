@@ -1,0 +1,596 @@
+
+/* =========================================
+   WELLQ - SISTEMA DE DISEÑO GLOBAL
+   Clínico / Paciente / Upload
+========================================= */
+
+:root {
+    --wq-bg: #071722;
+    --wq-sidebar: #041a27;
+    --wq-card: #082838;
+    --wq-input: #10384b;
+    --wq-table: #073044;
+
+    --wq-border: #28566c;
+    --wq-border-light: #3a7189;
+
+    --wq-primary: #00c8e8;
+    --wq-secondary: #1479f5;
+
+    --wq-text: #ffffff;
+    --wq-muted: #83d8f6;
+
+    --wq-radius: 12px;
+    --wq-sidebar-width: 260px;
+}
+
+/* TIPOGRAFÍA GLOBAL */
+html {
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--wq-text);
+    background: var(--wq-bg);
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* TÍTULOS */
+h1 {
+    font-size: 26px;
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+}
+
+h2 {
+    font-size: 20px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 17px;
+    line-height: 1.35;
+    font-weight: 600;
+}
+
+p {
+    line-height: 1.5;
+}
+
+/* MENÚ LATERAL */
+.sidebar {
+    width: var(--wq-sidebar-width);
+    flex: 0 0 var(--wq-sidebar-width);
+    background: var(--wq-sidebar);
+}
+
+.sidebar a {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.sidebar a.active {
+    font-weight: 700;
+}
+
+/* BARRA SUPERIOR */
+.main-content .topbar {
+    min-height: 96px;
+    padding: 14px 28px;
+    background: var(--wq-sidebar);
+    border-bottom: 1px solid var(--wq-border);
+}
+
+.topbar-clinico-info > strong,
+.wellq-summary-details h2,
+.wellq-patient-name {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.topbar-clinico-meta,
+.wellq-summary-details p,
+.wellq-patient-rut,
+.wellq-patient-profile {
+    font-size: 13px;
+    color: var(--wq-muted);
+}
+
+.topbar-indicador span,
+.wellq-summary-item span,
+.wellq-header-detail span {
+    font-size: 13px;
+    color: var(--wq-muted);
+}
+
+.topbar-indicador strong,
+.wellq-summary-item strong,
+.wellq-header-detail strong {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+/* TARJETAS PRINCIPALES */
+.main-content .content-card {
+    width: calc(100% - 48px);
+    max-width: 1440px;
+    margin: 24px auto;
+    padding: 28px;
+    background: var(--wq-card);
+    border: 1px solid var(--wq-border);
+    border-radius: var(--wq-radius);
+}
+
+/* TÍTULOS DE SECCIÓN */
+.content-card h1,
+.page-header h1 {
+    font-size: 26px;
+    line-height: 1.25;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 6px;
+}
+
+.content-card .page-header p,
+.content-card > p {
+    font-size: 14px;
+    color: var(--wq-muted);
+}
+
+/* CAMPOS Y FILTROS */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+select,
+textarea {
+    font-size: 14px;
+}
+
+.search-box,
+.filter select {
+    min-height: 46px;
+    background: var(--wq-input);
+    border: 1px solid var(--wq-border-light);
+    border-radius: 9px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #80bdd5;
+}
+
+/* TABLAS */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+}
+
+td {
+    font-size: 13px;
+}
+
+th,
+td {
+    padding: 14px;
+}
+
+thead {
+    background: #0b3a4e;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--wq-border);
+}
+
+/* BOTONES */
+button,
+.btn {
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+/* ETIQUETAS */
+label {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* PAGINACIÓN */
+.pagination button {
+    min-width: 36px;
+    height: 36px;
+    font-size: 13px;
+}
+
+/* DISEÑO RESPONSIVE */
+@media (max-width: 900px) {
+    .main-content .content-card {
+        width: calc(100% - 28px);
+        padding: 20px;
+        margin: 16px auto;
+    }
+
+    .content-card h1,
+    .page-header h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-content .content-card {
+        padding: 16px;
+    }
+
+    .content-card h1,
+    .page-header h1 {
+        font-size: 21px;
+    }
+}
+
+/* =========================================
+   ENCABEZADO ÚNICO WELLQ
+========================================= */
+
+.wq-header {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) 1fr 1fr;
+    align-items: center;
+    width: 100%;
+    min-height: 100px;
+    padding: 12px 28px;
+    margin: 0;
+    background: #041a27;
+    border-bottom: 1px solid #28566c;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.wq-header-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+    padding-right: 20px;
+}
+
+.wq-header-avatar {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #00c8e8;
+    border-radius: 50%;
+    color: #00c8e8;
+}
+
+.wq-header-avatar svg {
+    width: 22px;
+    height: 22px;
+}
+
+.wq-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.wq-header-name {
+    font-size: 17px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.wq-header-info > span {
+    font-size: 13px;
+    line-height: 1.4;
+    color: #83d8f6;
+}
+
+.wq-header-status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 72px;
+    padding: 8px 16px;
+    border-left: 1px solid #28566c;
+    text-align: center;
+}
+
+.wq-header-status span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #83d8f6;
+}
+
+.wq-header-status strong {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Encabezado adaptable */
+@media (max-width: 900px) {
+    .wq-header {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .wq-header-status {
+        min-height: 52px;
+        border-left: none;
+        border-top: 1px solid #28566c;
+    }
+}
+
+/* =========================================
+   WELLQ - DIMENSIONES GENERALES
+========================================= */
+
+:root {
+    --wq-sidebar-width: 260px;
+    --wq-content-padding: 28px;
+}
+
+/* Menú lateral: mismo ancho en todas las páginas */
+.sidebar,
+.side-bar,
+.wellq-sidebar {
+    width: var(--wq-sidebar-width);
+    min-width: var(--wq-sidebar-width);
+    flex: 0 0 var(--wq-sidebar-width);
+    box-sizing: border-box;
+}
+
+/* Opciones del menú */
+.sidebar a,
+.side-bar a,
+.wellq-sidebar a {
+    font-size: 15px;
+    min-height: 54px;
+    box-sizing: border-box;
+}
+
+/* Área principal: solo para layouts que usan margen
+   para dejar espacio al menú lateral fijo */
+body:has(.sidebar) .main-content,
+body:has(.side-bar) .main-content,
+body:has(.wellq-sidebar) .main-content {
+    min-width: 0;
+}
+
+/* ========================================
+   WELLQ - MENU LATERAL UNIFICADO
+======================================== */
+
+:root {
+    --wq-sidebar-width: 260px;
+}
+
+/* Ancho uniforme */
+.sidebar {
+    width: var(--wq-sidebar-width) !important;
+    min-width: var(--wq-sidebar-width) !important;
+    max-width: var(--wq-sidebar-width) !important;
+    flex: 0 0 var(--wq-sidebar-width) !important;
+    box-sizing: border-box;
+}
+
+/* Opciones del menú */
+.sidebar nav a,
+.sidebar .menu a,
+.sidebar .nav-menu a {
+    min-height: 56px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-sizing: border-box;
+}
+
+/* Contenido principal */
+.main-content,
+.wellq-main-content {
+    min-width: 0;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   WELLQ - UNIFICACION VISUAL
+   ========================================== */
+
+:root {
+    --wq-sidebar-width: 260px;
+    --wq-header-height: 90px;
+}
+
+/* Panel lateral */
+.sidebar {
+    width: var(--wq-sidebar-width) !important;
+    min-width: var(--wq-sidebar-width) !important;
+    max-width: var(--wq-sidebar-width) !important;
+    flex: 0 0 var(--wq-sidebar-width) !important;
+    box-sizing: border-box;
+}
+
+/* Opciones del menu */
+.sidebar nav a,
+.sidebar .menu a,
+.sidebar .nav-menu a {
+    font-size: 16px !important;
+    min-height: 62px !important;
+    box-sizing: border-box;
+}
+
+/* Encabezado superior */
+.topbar {
+    height: var(--wq-header-height) !important;
+    min-height: var(--wq-header-height) !important;
+    box-sizing: border-box;
+}
+
+/* Contenido principal */
+.main-content,
+.wellq-main-content {
+    min-width: 0;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+}
+
+/* Tipografia */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+
+/* Adaptacion a pantallas pequenas */
+@media (max-width: 850px) {
+    .sidebar {
+        width: 72px !important;
+        min-width: 72px !important;
+        max-width: 72px !important;
+        flex-basis: 72px !important;
+    }
+
+    .topbar {
+        height: auto !important;
+        min-height: 90px !important;
+    }
+}
+
+/* ==========================================
+   WELLQ - ESTILO UNIFICADO
+   REFERENCIA: PAGINA PACIENTE
+   ========================================== */
+
+:root {
+    --wq-sidebar-width: 290px;
+    --wq-header-height: 112px;
+}
+
+/* PANEL IZQUIERDO */
+
+.sidebar {
+    width: 290px !important;
+    min-width: 290px !important;
+    max-width: 290px !important;
+    flex: 0 0 290px !important;
+}
+
+/* LOGO WELLQ */
+
+.sidebar .brand {
+    height: 82px !important;
+    min-height: 82px !important;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+.sidebar .brand span {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+}
+
+/* OPCIONES DEL MENU */
+
+.sidebar nav a,
+.sidebar .menu a,
+.sidebar .nav-menu a {
+    min-height: 72px !important;
+    font-size: 18px !important;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-sizing: border-box;
+}
+
+/* OPCION ACTIVA */
+
+.sidebar nav a.active,
+.sidebar .menu a.active,
+.sidebar .nav-menu a.active {
+    font-weight: 700 !important;
+}
+
+/* ENCABEZADO SUPERIOR */
+
+.topbar {
+    min-height: 112px !important;
+    height: 112px !important;
+    box-sizing: border-box;
+}
+
+/* TEXTO GENERAL */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+
+/* CONTENIDO PRINCIPAL */
+
+.main-content,
+.wellq-main-content {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+
+    .sidebar {
+        width: 72px !important;
+        min-width: 72px !important;
+        max-width: 72px !important;
+        flex-basis: 72px !important;
+    }
+
+    .sidebar nav a,
+    .sidebar .menu a,
+    .sidebar .nav-menu a {
+        justify-content: center;
+        padding: 0 !important;
+    }
+
+    .topbar {
+        min-height: 90px !important;
+        height: auto !important;
+    }
+}

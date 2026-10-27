@@ -1,0 +1,44 @@
+
+<!-- ENCABEZADO COMPARTIDO WELLQ -->
+
+<header class="wq-header">
+
+    <div class="wq-header-user">
+
+        <div class="wq-header-avatar">
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
+            </svg>
+        </div>
+
+        <div class="wq-header-info">
+            <strong class="wq-header-name">
+                {{ saludo|default:"Bienvenido" }}{% if nombre_completo %}, {{ nombre_completo }}{% endif %}
+            </strong>
+
+            <span>RUT: {{ rut|default:"No disponible" }}</span>
+
+            <span>
+                Perfil: {{ user_type|default:"Clínico"|title }}
+            </span>
+        </div>
+
+    </div>
+
+    <div class="wq-header-status">
+        <span>Estado de Cuenta</span>
+        <strong>Activa</strong>
+    </div>
+
+    <div class="wq-header-status">
+        <span>Datos Protegidos</span>
+        <strong>Sesión Segura</strong>
+    </div>
+
+</header>

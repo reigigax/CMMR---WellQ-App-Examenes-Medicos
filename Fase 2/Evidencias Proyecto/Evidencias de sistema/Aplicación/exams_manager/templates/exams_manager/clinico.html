@@ -5,7 +5,10 @@ WellQ | Panel Clínico
 {% endblock %}
 
 {% block content %}
+{% load static %}
 
+<link rel="stylesheet" href="{% static 'css/clinico.css' %}">
+<link rel="stylesheet" href="{% static 'css/wellq-global.css' %}">
 <div class="clinical-layout">
 
     <!-- ==================================================
@@ -21,7 +24,7 @@ WellQ | Panel Clínico
 
         <nav class="menu">
 
-         
+
 
             <!-- SUBIR DOCUMENTOS -->
             <a href="{% url 'upload' %}">
@@ -80,35 +83,22 @@ WellQ | Panel Clínico
          CONTENIDO PRINCIPAL
     =================================================== -->
 
+
+ <!-- BARRA SUPERIOR -->
     <main class="main-content">
 
-        <!-- BARRA SUPERIOR -->
 
-        <header class="topbar">
+<!-- BARRA SUPERIOR CON INFORMACIÓN DEL CLÍNICO -->
+           {% include "exams_manager/includes/wellq_header.html" %}
 
-            <div></div>
 
-            <div class="profile">
-
-                <div class="profile-icon">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="8" r="4"/>
-                        <path d="M4 21c0-4.5 3.6-8 8-8s8 3.5 8 8"/>
-                    </svg>
-                </div>
-
-                <span>{{ nombre_completo|default:"Clínico" }}</span>
-
-            </div>
-
-        </header>
 
 
         <!-- ==================================================
              CONTENIDO TARJETA
         =================================================== -->
 
-        <section class="content-card">
+        <section class="content-card clinical-documents-card">
 
             <!-- NOTIFICACIONES Y ALERTAS DE DJANGO -->
             {% if messages %}
@@ -323,8 +313,381 @@ WellQ | Panel Clínico
 
 </div>
 
-
 <style>
+
+/* =========================================
+   PANEL DE DOCUMENTOS DE PACIENTES
+========================================= */
+
+.wq-clinico-panel {
+    width: 100%;
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+/* Título */
+.wq-clinico-panel h1,
+.wq-clinico-panel h2 {
+    font-size: 30px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+/* Descripciones */
+.wq-clinico-panel p {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* Buscadores y filtros */
+.wq-clinico-panel input,
+.wq-clinico-panel select {
+    min-height: 50px;
+    font-size: 15px;
+}
+
+/* Encabezados de tabla */
+.wq-clinico-panel th {
+    font-size: 14px;
+    padding: 16px;
+}
+
+/* Filas de tabla */
+.wq-clinico-panel td {
+    font-size: 14px;
+    padding: 18px 16px;
+}
+
+/* Botones */
+.wq-clinico-panel button {
+    font-size: 14px;
+    min-height: 40px;
+}
+
+/* Adaptación a pantallas pequeñas */
+@media (max-width: 900px) {
+    .wq-clinico-panel {
+        padding: 20px;
+    }
+
+    .wq-clinico-panel h1,
+    .wq-clinico-panel h2 {
+        font-size: 25px;
+    }
+}
+
+
+
+/* BARRA SUPERIOR UNIFICADA */
+.main-content .topbar {
+    width: 100%;
+    height: auto;
+    min-height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 14px 32px;
+    background: #071722;
+    border-bottom: 1px solid #315064;
+}
+
+/* DATOS DEL CLÍNICO */
+.topbar-clinico {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+}
+
+.topbar-clinico .profile-icon {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+}
+
+.topbar-clinico-info {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.topbar-clinico-info > strong {
+    color: #ffffff;
+    font-size: 17px;
+    line-height: 1.3;
+}
+
+.topbar-clinico-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    color: #77d9ff;
+    font-size: 13px;
+}
+
+/* ESTADO Y SEGURIDAD */
+.topbar-indicadores {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.topbar-indicador {
+    min-width: 175px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 22px;
+    border-left: 1px solid #315064;
+    text-align: center;
+}
+
+.topbar-indicador span {
+    color: #77d9ff;
+    font-size: 14px;
+}
+
+.topbar-indicador strong {
+    color: #ffffff;
+    font-size: 17px;
+}
+
+/* TARJETA JUSTO DEBAJO DEL ENCABEZADO */
+.main-content .content-card {
+    margin: 24px auto;
+    width: calc(100% - 48px);
+    max-width: 1440px;
+}
+
+/* ADAPTACIÓN A PANTALLAS PEQUEÑAS */
+@media (max-width: 1100px) {
+    .main-content .topbar {
+        flex-wrap: wrap;
+        padding: 16px 20px;
+    }
+
+    .topbar-indicadores {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .topbar-indicador {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .topbar-clinico-info > strong {
+        font-size: 14px;
+    }
+
+    .topbar-indicador {
+        padding: 8px;
+    }
+
+    .topbar-indicador span {
+        font-size: 12px;
+    }
+
+    .topbar-indicador strong {
+        font-size: 14px;
+    }
+}
+
+
+/* ============================================
+   WELLQ - REFINAMIENTO VISUAL PANEL CLÍNICO
+============================================ */
+
+/* Encabezado más compacto */
+.main-content .topbar {
+    min-height: 90px;
+    padding: 12px 30px;
+    gap: 20px;
+}
+
+.topbar-clinico {
+    gap: 14px;
+}
+
+.topbar-clinico-info > strong {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+.topbar-clinico-meta {
+    gap: 5px 18px;
+    font-size: 13px;
+}
+
+.topbar-indicador {
+    min-width: 170px;
+    gap: 6px;
+    padding: 8px 18px;
+}
+
+.topbar-indicador span {
+    font-size: 13px;
+    color: #8ad9f5;
+}
+
+.topbar-indicador strong {
+    font-size: 16px;
+}
+
+/* Tarjeta de documentos */
+.main-content .content-card {
+    width: calc(100% - 56px);
+    max-width: 1440px;
+    margin: 26px auto;
+    padding: 28px 30px;
+    border: 1px solid #2d5b70;
+    border-radius: 14px;
+    background: #092737;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Título */
+.content-card .page-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.content-card .page-header p {
+    margin: 7px 0 0;
+    font-size: 14px;
+    color: #9acde1;
+}
+
+/* Filtros */
+.content-card .filters {
+    display: grid;
+    grid-template-columns:
+        minmax(240px, 2fr)
+        minmax(150px, 0.9fr)
+        minmax(150px, 0.9fr);
+    align-items: end;
+    gap: 16px;
+    margin-top: 26px;
+    margin-bottom: 22px;
+}
+
+.content-card .search-box,
+.content-card .filter select {
+    height: 46px;
+    background: #12394c;
+    border: 1px solid #426f83;
+    border-radius: 9px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.content-card .search-box:hover,
+.content-card .filter select:hover {
+    border-color: #6ba9c3;
+}
+
+.content-card .search-box:focus-within,
+.content-card .filter select:focus {
+    border-color: #20d1ed;
+    box-shadow: 0 0 0 3px rgba(32, 209, 237, 0.10);
+}
+
+/* Tabla */
+.content-card .table-container {
+    border: 1px solid #37677d;
+    border-radius: 10px;
+    background: #082f40;
+    overflow-x: auto;
+}
+
+.content-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.content-card thead {
+    background: #103d50;
+}
+
+.content-card th {
+    padding: 15px 14px;
+    font-size: 12px;
+    color: #e1f4fc;
+    font-weight: 700;
+}
+
+.content-card td {
+    padding: 16px 14px;
+    font-size: 13px;
+}
+
+.content-card tbody tr:hover {
+    background: rgba(28, 185, 224, 0.07);
+}
+
+/* Estado sin documentos */
+.content-card .empty-table {
+    padding: 38px 20px;
+    color: #9acde1;
+    font-size: 14px;
+}
+
+/* Paginación */
+.content-card .pagination {
+    margin-top: 18px;
+    gap: 8px;
+}
+
+.content-card .pagination button {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+}
+
+.content-card .pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Adaptación */
+@media (max-width: 1100px) {
+    .content-card .filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .content-card .search-box {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 700px) {
+    .main-content .content-card {
+        width: calc(100% - 24px);
+        padding: 18px;
+        margin: 14px auto;
+    }
+
+    .content-card .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .content-card .search-box {
+        grid-column: auto;
+    }
+
+    .content-card .page-header h1 {
+        font-size: 22px;
+    }
+}
+
 /* ==================================================
    GENERAL
 ================================================== */
@@ -1111,6 +1474,308 @@ tbody tr:last-child td {
     }
 
 }
+
+
+/* Corrección definitiva del encabezado */
+.clinical-layout > .main-content > .topbar {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    padding: 12px 28px;
+    margin: 0;
+    background: #071722;
+}
+
+.clinical-layout .topbar .wellq-clinician-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) 1fr 1fr;
+    align-items: center;
+    width: 100%;
+    min-height: 76px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+}
+
+.clinical-layout .wellq-summary-details h2 {
+    margin: 0 0 6px;
+    font-size: 17px;
+}
+
+.clinical-layout .wellq-summary-details p {
+    margin: 3px 0;
+    font-size: 13px;
+}
+
+.clinical-layout .wellq-summary-item {
+    min-height: 68px;
+}
+
+.clinical-layout > .main-content > .content-card {
+    width: calc(100% - 48px);
+    max-width: 1440px;
+    margin: 24px auto;
+    padding: 28px 30px;
+}
+
+@media (max-width: 900px) {
+    .clinical-layout .topbar .wellq-clinician-summary {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .clinical-layout .wellq-summary-item {
+        border-left: none;
+        border-top: 1px solid #315064;
+    }
+}
+
+
+/* =====================================
+   INFORMACIÓN DEL CLÍNICO - WELLQ
+===================================== */
+
+.wellq-clinician-summary {
+    width: 100%;
+    min-height: 115px;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) 1fr 1fr;
+    align-items: center;
+    padding: 14px 28px;
+    background: #071722;
+    border-bottom: 1px solid #315064;
+}
+
+.wellq-summary-person {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    padding-right: 18px;
+}
+
+.wellq-summary-avatar {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #16d8f3;
+    border-radius: 50%;
+    background: rgba(13, 75, 98, 0.18);
+}
+
+.wellq-summary-avatar svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: #19d7f3;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.wellq-summary-details {
+    min-width: 0;
+}
+
+.wellq-summary-details h2 {
+    margin: 0 0 7px;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.wellq-summary-details p {
+    margin: 4px 0;
+    color: #77d9ff;
+    font-size: 14px;
+}
+
+.wellq-summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 85px;
+    padding: 10px;
+    border-left: 1px solid #315064;
+    text-align: center;
+}
+
+.wellq-summary-item span {
+    color: #77d9ff;
+    font-size: 15px;
+}
+
+.wellq-summary-item strong {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+@media (max-width: 950px) {
+    .wellq-clinician-summary {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .wellq-summary-item {
+        min-height: 60px;
+        border-left: none;
+        border-top: 1px solid #315064;
+    }
+}
+
+
+/* Layout corregido: encabezado, resumen y tarjeta son hermanos */
+.clinical-layout { display: flex; width: 100%; min-height: 100vh; }
+.clinical-layout > .sidebar { width: 230px; flex: 0 0 230px; }
+.clinical-layout > .main-content {
+    display: flex; flex-direction: column; flex: 1 1 0;
+    min-width: 0; width: auto; margin: 0; padding: 0;
+}
+.clinical-layout > .main-content > .topbar {
+    display: flex; justify-content: flex-end; width: 100%;
+    height: 72px; min-height: 72px; margin: 0; padding: 0 28px;
+}
+.clinical-layout .topbar .profile { min-width: 0; }
+.clinical-layout .topbar .profile span { max-width: 340px; text-align: right; }
+.clinical-layout > .main-content > .wellq-clinician-summary {
+    width: 100%; margin: 0; padding: 18px 28px;
+    display: grid; grid-template-columns: minmax(0, 2fr) minmax(160px, 1fr) minmax(180px, 1fr);
+    gap: 0; align-items: center;
+}
+.clinical-layout > .main-content > .content-card {
+    width: calc(100% - 48px); max-width: 1280px;
+    margin: 24px auto; padding: 26px; min-width: 0;
+}
+.clinical-layout .content-card .filters {
+    display: grid; grid-template-columns: minmax(220px, 2fr) minmax(150px, .9fr) minmax(150px, .9fr);
+    gap: 18px; align-items: end;
+}
+.clinical-layout .content-card .table-container { width: 100%; overflow-x: auto; }
+.clinical-layout .content-card table { width: 100%; }
+@media (max-width: 1100px) {
+    .clinical-layout .content-card .filters { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+    .clinical-layout > .main-content > .wellq-clinician-summary { grid-template-columns: 1fr; gap: 10px; }
+    .clinical-layout .wellq-summary-item { border-left: 0; border-top: 1px solid #315064; min-height: 60px; }
+}
+@media (max-width: 760px) {
+    .clinical-layout > .sidebar { width: 70px; flex-basis: 70px; }
+    .clinical-layout > .main-content > .content-card { width: calc(100% - 24px); margin: 12px auto; padding: 18px; }
+    .clinical-layout > .main-content > .topbar { padding: 0 14px; }
+    .clinical-layout > .main-content > .wellq-clinician-summary { padding: 16px; }
+}
+
+/* =========================================
+   WELLQ - DOCUMENTOS DE PACIENTES
+   Ajuste de tamaño del panel principal
+   ========================================= */
+
+/* Área principal */
+.main-content {
+    min-width: 0;
+}
+
+/* Cuadro de documentos */
+.main-content .content-card {
+    width: calc(100% - 48px);
+    max-width: none;
+    min-height: 680px;
+    margin: 24px;
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+/* Encabezado del cuadro */
+.main-content .content-card h1,
+.main-content .content-card h2 {
+    font-size: 28px;
+    line-height: 1.3;
+}
+
+/* Separación entre filtros y tabla */
+.main-content .content-card table {
+    width: 100%;
+}
+
+/* Tabla de documentos */
+.main-content .content-card th {
+    padding: 18px 15px;
+}
+
+.main-content .content-card td {
+    padding: 24px 15px;
+}
+
+/* Adaptación a pantallas pequeñas */
+@media (max-width: 768px) {
+    .main-content .content-card {
+        width: calc(100% - 28px);
+        min-height: 550px;
+        margin: 14px;
+        padding: 20px;
+    }
+}
+
+/* ==========================================
+   WELLQ - PANEL DOCUMENTOS DE PACIENTES
+   Mismo tamaño visual que Mis archivos
+   ========================================== */
+
+.clinical-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.clinical-layout > .main-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Panel principal */
+.clinical-layout .main-content .clinical-documents-card {
+    width: calc(100% - 48px);
+    max-width: none;
+    min-height: calc(100vh - 240px);
+    height: auto;
+
+    margin: 24px;
+    padding: 30px;
+
+    box-sizing: border-box;
+    border-radius: 14px;
+}
+
+/* Mantener proporciones del contenido */
+.clinical-documents-card h1,
+.clinical-documents-card h2 {
+    font-size: 28px;
+    line-height: 1.3;
+}
+
+/* Pantallas pequeñas */
+@media (max-width: 768px) {
+    .clinical-layout .main-content .clinical-documents-card {
+        width: calc(100% - 28px);
+        min-height: 550px;
+        margin: 14px;
+        padding: 20px;
+    }
+}
+
+
 
 </style>
 
