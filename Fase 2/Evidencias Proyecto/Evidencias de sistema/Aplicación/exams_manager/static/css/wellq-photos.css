@@ -1,0 +1,24 @@
+/* WellQ v4 - Fotografias de referencia en alta resolucion, cargadas por URL.
+   Requiere internet; no modifica formularios ni logica Django. */
+.login-page .login-card {width:min(1100px,calc(100vw - 48px))!important;max-width:1100px!important;min-height:580px;grid-template-columns:42% 58%!important;}
+.login-page .login-brand-panel {background-color:#05283b!important;background-image:linear-gradient(180deg,rgba(3,25,42,.06) 0%,rgba(3,25,42,.18) 40%,rgba(3,25,42,.94) 100%),url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=85')!important;background-size:cover!important;background-position:center 35%!important;background-repeat:no-repeat!important;justify-content:flex-end!important;padding:40px!important;}
+.login-page .login-brand-panel .brand-circle {width:62px;height:62px;flex:none;}
+.login-page .login-brand-panel h1 {font-size:40px!important;margin:10px 0!important;}
+.login-page .login-form-panel {padding:44px 50px!important;}
+.signup-page .signup-shell {width:min(1160px,calc(100vw - 48px))!important;grid-template-columns:36% minmax(0,1fr)!important;}
+.signup-page .signup-identity {background-color:#05283b!important;background-image:linear-gradient(180deg,rgba(3,25,42,.04) 0%,rgba(3,25,42,.12) 40%,rgba(3,25,42,.94) 100%),url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1100&q=85')!important;background-size:cover!important;background-position:center 30%!important;background-repeat:no-repeat!important;justify-content:flex-end!important;align-items:center!important;padding:30px 24px 45px!important;min-height:580px;}
+.signup-page .signup-identity::after{display:none!important;}
+.signup-page .signup-identity-inner{width:100%;padding:0!important;}
+.signup-page .signup-orb{width:58px;height:58px;margin:0 auto 10px;}
+.signup-page .signup-logo{font-size:40px;}
+.signup-page .signup-tagline{font-size:15px;margin:10px 0 0;}
+.wellq-photo-banner{position:relative;display:flex;align-items:center;min-height:160px;overflow:hidden;border:1px solid #117b9e;border-radius:13px;margin:0 0 22px;background-color:#062a3e;background-repeat:no-repeat;background-position:center 44%;background-size:cover;isolation:isolate;}
+.wellq-photo-banner::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#06283c 0%,rgba(6,40,60,.98) 29%,rgba(6,40,60,.80) 56%,rgba(6,40,60,.12) 100%);}
+.wellq-photo-banner__content{position:relative;z-index:1;max-width:62%;padding:26px 30px;}
+.wellq-photo-banner h2{font-size:clamp(22px,2vw,28px);line-height:1.15;margin:0 0 8px;color:#fff;font-weight:750;}
+.wellq-photo-banner p{font-size:13px;line-height:1.5;margin:0;color:#bce6f7;}
+.wellq-photo-banner--paciente{background-image:url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1800&q=85');}
+.wellq-photo-banner--clinico{background-image:url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1800&q=85');}
+.wellq-photo-banner--upload{background-image:url('https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=1800&q=85');min-height:130px;}
+@media(max-width:850px){.login-page .login-card{grid-template-columns:40% 60%!important}.login-page .login-form-panel{padding:28px!important}.signup-page .signup-shell{grid-template-columns:32% minmax(0,1fr)!important}}
+@media(max-width:700px){.login-page .login-card,.signup-page .signup-shell{grid-template-columns:1fr!important}.login-page .login-brand-panel,.signup-page .signup-identity{min-height:190px!important;padding:24px!important;background-position:center 28%!important}.login-page .login-brand-panel .brand-circle,.signup-page .signup-orb{width:42px;height:42px}.login-page .login-brand-panel h1,.signup-page .signup-logo{font-size:28px!important}.login-page .login-brand-panel p,.signup-page .signup-tagline{font-size:12px!important}.wellq-photo-banner{min-height:115px}.wellq-photo-banner__content{max-width:85%;padding:16px}.wellq-photo-banner::before{background:linear-gradient(90deg,#06283c 0%,rgba(6,40,60,.97) 52%,rgba(6,40,60,.35) 100%)}.wellq-photo-banner h2{font-size:20px}}

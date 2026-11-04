@@ -9,6 +9,11 @@ WellQ | Panel Clínico
 
 <link rel="stylesheet" href="{% static 'css/clinico.css' %}">
 <link rel="stylesheet" href="{% static 'css/wellq-global.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/wellq-photos.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'css/wellq-fotos.css' %}?v=20261104-2">
+
+
 <div class="clinical-layout">
 
     <!-- ==================================================
@@ -99,6 +104,13 @@ WellQ | Panel Clínico
         =================================================== -->
 
         <section class="content-card clinical-documents-card">
+<div class="wellq-photo-banner wellq-photo-banner--clinico">
+  <div class="wellq-photo-banner__text">
+    <h2>Gestión de pacientes</h2>
+    <p>Consulta y administra los documentos médicos de tus pacientes.</p>
+  </div>
+</div>
+
 
             <!-- NOTIFICACIONES Y ALERTAS DE DJANGO -->
             {% if messages %}
@@ -110,6 +122,10 @@ WellQ | Panel Clínico
                     {% endfor %}
                 </div>
             {% endif %}
+
+
+            <!-- Banner fotografico WellQ: contenido decorativo, no altera formularios -->
+            
 
             <!-- TÍTULO -->
 

@@ -1037,3 +1037,164 @@ td {
         font-size: 13px;
     }
 }
+
+/* =========================================
+   WELLQ - AJUSTE DE ANCHO SUBIR DOCUMENTOS
+   ========================================= */
+
+/* El contenido debe ocupar el espacio disponible */
+body:has(.upload-page) .main-content,
+body:has(.upload-page) .content,
+body:has(.upload-page) .content-wrapper {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* Eliminar el ancho limitado y el centrado */
+.upload-page,
+.upload-page .upload-container,
+.upload-page .upload-card,
+.upload-page .content-card {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Conservar espacios laterales uniformes */
+.upload-page {
+    padding: 18px 20px !important;
+}
+
+/* El banner se adapta al ancho del contenedor */
+.upload-page .wellq-photo-banner {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Diseño adaptable */
+@media (max-width: 768px) {
+    .upload-page {
+        padding: 12px !important;
+    }
+}
+
+/* ==========================================
+   WELLQ - CORRECCION LAYOUT SUBIR DOCUMENTOS
+   ========================================== */
+
+/* Contenedor general con sidebar */
+.upload-layout {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 100vh;
+    align-items: stretch;
+}
+
+/* Mantener el ancho del menu lateral */
+.upload-layout .sidebar {
+    flex: 0 0 200px !important;
+    width: 200px !important;
+}
+
+/* Ocupar todo el espacio a la derecha */
+.upload-layout .main-content {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 18px 20px !important;
+    box-sizing: border-box !important;
+}
+
+/* Expandir el cuadro principal */
+.upload-layout .content-card {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Banner y formulario al mismo ancho */
+.upload-layout .wellq-photo-banner,
+.upload-layout .drop-zone,
+.upload-layout .selected-section,
+.upload-layout .table-container {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Ajuste para pantallas pequenas */
+@media (max-width: 768px) {
+    .upload-layout .sidebar {
+        flex-basis: 70px !important;
+        width: 70px !important;
+    }
+
+    .upload-layout .main-content {
+        padding: 12px !important;
+    }
+}
+
+/* ==========================================
+   WELLQ - SUBIR DOCUMENTOS
+   Corregir contenedor centrado
+   ========================================== */
+
+/* Área principal a la derecha del menú */
+.upload-layout .main-content {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    padding: 18px 20px !important;
+    flex: 1 1 auto !important;
+    box-sizing: border-box !important;
+}
+
+/* Panel completo de subir documentos */
+.upload-layout .main-content .content-card {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+}
+
+/* Banner alineado al panel */
+.upload-layout .wellq-photo-banner {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Área para arrastrar documentos */
+.upload-layout .drop-zone {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Tabla de archivos */
+.upload-layout .selected-section,
+.upload-layout .table-container {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Adaptación para pantallas pequeñas */
+@media (max-width: 768px) {
+    .upload-layout .main-content {
+        padding: 12px !important;
+    }
+
+    .upload-layout .main-content .content-card {
+        padding: 14px !important;
+    }
+}
