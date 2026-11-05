@@ -10,16 +10,16 @@ ZONA_CHILE = ZoneInfo("America/Santiago")
 
 
 # ------------------------------------------------------------------
-# ExcepciÃ³n y Helper Centralizado para la API
+# Excepción y Helper Centralizado para la API
 # ------------------------------------------------------------------
 class TokenExpiredException(Exception):
-    """ExcepciÃ³n lanzada cuando la API responde con HTTP 401 Unauthorized."""
+    """Excepción lanzada cuando la API responde con HTTP 401 Unauthorized."""
     pass
 
 
 def api_request(request, method, endpoint, data=None, files=None, json=None, timeout=10):
     """
-    FunciÃ³n centralizada para realizar peticiones a la API REST.
+    Función centralizada para realizar peticiones a la API REST.
     Si la API responde con un estado 401 (Unauthorized), interrumpe el flujo
     lanzando TokenExpiredException.
     """
@@ -42,7 +42,7 @@ def api_request(request, method, endpoint, data=None, files=None, json=None, tim
             timeout=timeout
         )
 
-        # Si el token caducÃ³ o es invÃ¡lido en la API, lanzamos la excepciÃ³n
+        # Si el token caducó o es inválido en la API, lanzamos la excepción
         if response.status_code == 401:
             raise TokenExpiredException()
 
@@ -52,12 +52,12 @@ def api_request(request, method, endpoint, data=None, files=None, json=None, tim
 
 
 # ------------------------------------------------------------------
-# Decoradores de ProtecciÃ³n con Captura Global de Caducidad
+# Decoradores de Protección con Captura Global de Caducidad
 # ------------------------------------------------------------------
 def jwt_required(view_func):
     """
-    Verifica que exista token en la sesiÃ³n y captura automÃ¡ticamente 
-    si el token caduca durante cualquier operaciÃ³n.
+    Verifica que exista token en la sesión y captura automáticamente
+    si el token caduca durante cualquier operación.
     """
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
@@ -77,7 +77,7 @@ def jwt_required(view_func):
 
 def clinico_required(view_func):
     """
-    Verifica que la sesiÃ³n corresponda a un perfil clÃ­nico y gestiona
+    Verifica que la sesión corresponda a un perfil clínico y gestiona
     la caducidad del token de forma global.
     """
     @wraps(view_func)
@@ -88,7 +88,7 @@ def clinico_required(view_func):
 
         user_type = request.session.get('user_type')
         if user_type != 'clinico':
-            messages.error(request, "Acceso restringido: Esta secciÃ³n requiere perfil clÃ­nico.")
+            messages.error(request, "Acceso restringido: Esta sección requiere perfil clínico.")
             return redirect('paciente')
 
         try:
@@ -102,10 +102,10 @@ def clinico_required(view_func):
 
 
 # ------------------------------------------------------------------
-# Vistas PÃºblicas / AutenticaciÃ³n
+# Vistas Públicas / Autenticación
 # ------------------------------------------------------------------
 def login(request):
-    # RedirecciÃ³n si la sesiÃ³n aÃºn se encuentra activa
+    # Redirección si la sesión aún se encuentra activa
     if request.session.get('access_token'):
         if request.session.get('user_type') == 'clinico':
             return redirect('clinico')
@@ -138,11 +138,11 @@ def login(request):
                     return redirect('clinico')
                 return redirect('paciente')
             else:
-                error_msg = response.json().get('detail', 'Credenciales invÃ¡lidas')
+                error_msg = response.json().get('detail', 'Credenciales inválidas')
                 messages.error(request, error_msg)
 
         except requests.exceptions.RequestException:
-            messages.error(request, "Error de conexiÃ³n con el servidor de autenticaciÃ³n.")
+            messages.error(request, "Error de conexión con el servidor de autenticación.")
 
     return render(request, 'exams_manager/login.html')
 
@@ -184,7 +184,7 @@ def sign_up(request):
             response = requests.post(f"{API_BASE_URL}/auth/register/paciente/", json=payload, timeout=5)
 
             if response.status_code == 201:
-                messages.success(request, "Â¡Cuenta creada exitosamente! Ya puedes iniciar sesiÃ³n.")
+                messages.success(request, "¡Cuenta creada exitosamente! Ya puedes iniciar sesión.")
                 return redirect('login')
             else:
                 errores = response.json()
@@ -195,7 +195,7 @@ def sign_up(request):
                 messages.error(request, msg)
 
         except requests.exceptions.RequestException:
-            messages.error(request, "Error de conexiÃ³n con el servidor de la API.")
+            messages.error(request, "Error de conexión con el servidor de la API.")
 
     return render(request, 'exams_manager/sign_up.html')
 
@@ -226,7 +226,7 @@ def upload(request):
         archivos = request.FILES.getlist('documentos')
 
         if not archivos:
-            messages.error(request, "No se seleccionÃ³ ningÃºn archivo para subir.")
+            messages.error(request, "No se seleccionó ningún archivo para subir.")
             return redirect('upload')
 
         exitos = 0
@@ -236,7 +236,7 @@ def upload(request):
             files = {'archivo': (f.name, f.read(), f.content_type)}
             data = {
                 'titulo': f.name,
-                'sesion': 'SesiÃ³n Portal Web',
+                'sesion': 'Sesión Portal Web',
                 'nota_clinica': 'Documento cargado desde el panel de usuario.',
                 'version_archivo': 1
             }
@@ -251,7 +251,7 @@ def upload(request):
         if exitos > 0:
             messages.success(request, f"Se cargaron {exitos} documento(s) correctamente.")
         if errores > 0:
-            messages.error(request, f"OcurriÃ³ un error al procesar {errores} archivo(s).")
+            messages.error(request, f"Ocurrió un error al procesar {errores} archivo(s).")
 
         return redirect('upload')
 
@@ -302,7 +302,7 @@ def paciente(request):
 
 @jwt_required
 def eliminar_examen(request, examen_id):
-    """EnvÃ­a una peticiÃ³n DELETE a la API para eliminar un examen por su ID."""
+    """Envía una petición DELETE a la API para eliminar un examen por su ID."""
     if request.method == 'POST':
         response = api_request(request, 'DELETE', f'/examenes/{examen_id}/')
 
@@ -311,5 +311,5 @@ def eliminar_examen(request, examen_id):
         else:
             messages.error(request, "No se pudo eliminar el documento. Intente nuevamente.")
 
-    # Redirige de vuelta a la pÃ¡gina desde donde se solicitÃ³ la eliminaciÃ³n
+    # Redirige de vuelta a la página desde donde se solicitó la eliminación
     return redirect(request.META.get('HTTP_REFERER', 'clinico'))

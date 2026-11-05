@@ -1,0 +1,152 @@
+
+.wellq-banner {
+    position: relative;
+    width: 100%;
+    min-height: 110px;
+    overflow: hidden;
+    border: 1px solid #00c9e8;
+    border-radius: 12px;
+    background-color: #052638;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+}
+
+.wellq-banner--clinico {
+    background-image: url("../img/wellq-clinico-gestion-banner.webp");
+}
+
+.wellq-banner--paciente {
+    background-image: url("../img/wellq-paciente-examenes-banner.webp");
+}
+
+.wellq-banner--upload {
+    background-image: url("../img/wellq-subir-documentos-banner.webp");
+}
+
+.wellq-banner__content {
+    position: relative;
+    z-index: 1;
+    padding: 20px 24px;
+    max-width: 55%;
+    color: #fff;
+}
+
+.wellq-banner__content h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.wellq-banner__content p {
+    margin: 0;
+    font-size: 12px;
+    color: #c8edff;
+}
+
+@media (max-width: 768px) {
+    .wellq-banner {
+        min-height: 120px;
+        background-position: center;
+    }
+
+    .wellq-banner__content {
+        max-width: 75%;
+        padding: 16px;
+    }
+
+    .wellq-banner__content h2 {
+        font-size: 18px;
+    }
+}
+
+/* WELLQ - CORRECCION DE IMAGENES */
+
+/* Banner dentro del panel principal */
+.wellq-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 110px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid #00c9e8;
+    border-radius: 12px;
+    background-color: #052638;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.wellq-banner--paciente {
+    background-image: url("../img/wellq-paciente-examenes-banner.webp");
+}
+
+.wellq-banner--clinico {
+    background-image: url("../img/wellq-clinico-gestion-banner.webp");
+}
+
+.wellq-banner--upload {
+    background-image: url("../img/wellq-subir-documentos-banner.webp");
+}
+
+.wellq-banner__content {
+    position: relative;
+    z-index: 1;
+    padding: 20px 24px;
+    max-width: 55%;
+    color: #ffffff;
+}
+
+.wellq-banner__content h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.wellq-banner__content p {
+    margin: 0;
+    color: #c8edff;
+    font-size: 12px;
+}
+
+/* LOGIN - fotografia completa en el panel izquierdo */
+.login-page .login-brand-panel {
+    background-color: #052638;
+    background-image: url("../img/wellq-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+}
+
+/* REGISTRO - fotografia completa */
+.signup-page .wellq-signup-photo {
+    background-color: #052638;
+    background-image: url("../img/wellq-registro.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+}
+
+/* Evitar que las fotos se deformen */
+.login-brand-panel img,
+.wellq-signup-photo img {
+    max-width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .wellq-banner__content {
+        max-width: 75%;
+        padding: 16px;
+    }
+
+    .wellq-banner__content h2 {
+        font-size: 18px;
+    }
+}

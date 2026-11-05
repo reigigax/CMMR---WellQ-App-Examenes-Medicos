@@ -432,6 +432,10 @@
 }
 </style>
 
+
+<link rel="stylesheet" href="{% static 'css/wellq-photos.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'css/wellq-fotos.css' %}?v=20261104-2">
+
 <div class="patient-layout">
 
     <!-- MENÚ LATERAL -->
@@ -500,6 +504,13 @@
         {% include "exams_manager/includes/wellq_header.html" %}
 
         <section class="content-card wellq-main-content">
+<div class="wellq-photo-banner wellq-photo-banner--paciente">
+  <div class="wellq-photo-banner__text">
+    <h2>Tus exámenes, siempre disponibles</h2>
+    <p>Consulta y administra tu información médica desde un solo lugar.</p>
+  </div>
+</div>
+
 
             {% if messages %}
                 {% for message in messages %}
@@ -508,6 +519,10 @@
                     </div>
                 {% endfor %}
             {% endif %}
+
+
+            <!-- Banner fotografico WellQ: contenido decorativo, no altera formularios -->
+            
 
             <!-- TARJETAS -->
             <div class="wellq-stats">

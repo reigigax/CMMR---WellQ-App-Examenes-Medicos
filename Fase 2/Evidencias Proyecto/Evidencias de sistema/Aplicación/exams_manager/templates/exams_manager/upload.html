@@ -8,8 +8,11 @@ WellQ | Subir Documentos
 
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/clinico.css' %}">
-<link rel="stylesheet" href="{% static 'css/upload.css' %}">
 <link rel="stylesheet" href="{% static 'css/wellq-global.css' %}">
+<link rel="stylesheet" href="{% static 'css/wellq-photos.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'css/wellq-fotos.css' %}?v=20261104-4">
+<link rel="stylesheet" href="{% static 'css/upload.css' %}?v=20261104-5">
+
 <div class="upload-layout">
 
     <aside class="sidebar">
@@ -80,6 +83,17 @@ WellQ | Subir Documentos
        {% include "exams_manager/includes/wellq_header.html" %}
 
         <section class="content-card">
+            <div class="wellq-photo-banner wellq-photo-banner--upload">
+            <div class="wellq-photo-banner__text">
+                <h2>Tu información médica, organizada</h2>
+                <p>Organiza tus exámenes médicos de forma simple y segura.</p>
+            </div>
+            </div>
+
+
+
+            <!-- Banner fotografico WellQ: contenido decorativo, no altera formularios -->
+            
 
             <div class="page-header">
                 <div>

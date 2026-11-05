@@ -1,362 +1,33 @@
 {% extends "base.html" %}
-
-{% block title %}WellQ | Crear Cuenta{% endblock %}
-
+{% load static %}
+{% block title %}WellQ | Crear cuenta{% endblock %}
 {% block content %}
 
-{% load static %}
-
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
-
-<style>
-
-    /* ==================================================
-       TARJETA (mas ancha que el login para dos columnas)
-    ================================================== */
-
-    .signup-card {
-        max-width: 720px;
-    }
-
-
-    /* ==================================================
-       LOGO (arriba a la izquierda)
-    ================================================== */
-
-    .signup-brand {
-        justify-content: flex-start;
-    }
-
-
-    /* ==================================================
-       FORMULARIO EN DOS COLUMNAS
-    ================================================== */
-
-    .signup-form {
-        display: flex;
-        flex-direction: column;
-
-        gap: 18px;
-    }
-
-    .signup-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-
-        gap: 18px;
-    }
-
-
-    /* ==================================================
-       SEGURIDAD DE LA CONTRASEÑA
-    ================================================== */
-
-    .password-strength {
-        display: flex;
-        flex-direction: column;
-
-        gap: 8px;
-
-        margin-top: 4px;
-    }
-
-    .password-strength[hidden] {
-        display: none;
-    }
-
-    .strength-segments {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-
-        gap: 6px;
-    }
-
-    .strength-segments span {
-        height: 4px;
-
-        background: #1f4357;
-
-        border-radius: 2px;
-
-        transition: background .2s;
-    }
-
-    .password-strength.debil .strength-segments span:nth-child(-n+1) {
-        background: #ff6b6b;
-    }
-
-    .password-strength.regular .strength-segments span:nth-child(-n+2) {
-        background: #f5a524;
-    }
-
-    .password-strength.buena .strength-segments span {
-        background: #2ed39a;
-    }
-
-    .strength-text {
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .password-strength.debil .strength-text {
-        color: #ff8a8a;
-    }
-
-    .password-strength.regular .strength-text {
-        color: #ffc061;
-    }
-
-    .password-strength.buena .strength-text {
-        color: #4fe3ae;
-    }
-
-    .password-rules {
-        display: flex;
-        flex-direction: column;
-
-        gap: 6px;
-
-        margin: 6px 0 0;
-        padding: 0;
-
-        list-style: none;
-
-        font-size: 13px;
-    }
-
-    .password-rules li {
-        display: flex;
-        align-items: center;
-
-        gap: 8px;
-
-        color: #ff8a8a;
-    }
-
-    .password-rules li.cumple {
-        color: #4fe3ae;
-    }
-
-    .password-rules svg,
-    .password-match svg,
-    .field-error svg {
-        flex-shrink: 0;
-
-        width: 14px;
-        height: 14px;
-
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2.2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    .password-rules .icon-check,
-    .password-rules li.cumple .icon-cross,
-    .password-match .icon-check,
-    .password-match.coincide .icon-cross {
-        display: none;
-    }
-
-    .password-rules li.cumple .icon-check,
-    .password-match.coincide .icon-check {
-        display: block;
-    }
-
-
-    /* ==================================================
-       CONFIRMAR CONTRASEÑA: coinciden / no coinciden
-    ================================================== */
-
-    .field .input-icon input.no-coincide {
-        border-color: #ff8a8a;
-
-        box-shadow:
-            0 0 0 2px rgba(255, 138, 138, .12);
-    }
-
-    .field .input-icon input.coincide {
-        border-color: #4fe3ae;
-
-        box-shadow:
-            0 0 0 2px rgba(79, 227, 174, .12);
-    }
-
-    .password-match {
-        display: flex;
-        align-items: center;
-
-        gap: 8px;
-
-        margin: 0;
-
-        color: #ff8a8a;
-
-        font-size: 13px;
-    }
-
-    .password-match[hidden] {
-        display: none;
-    }
-
-    .password-match.coincide {
-        color: #4fe3ae;
-    }
-
-
-    /* ==================================================
-       ERRORES AL REGISTRAR (campo en rojo + mensaje)
-    ================================================== */
-
-    .signup-form .field input.invalido {
-        border-color: #ff8a8a;
-
-        box-shadow:
-            0 0 0 2px rgba(255, 138, 138, .12);
-    }
-
-    .field-error {
-        display: flex;
-        align-items: center;
-
-        gap: 8px;
-
-        margin: 0;
-
-        color: #ff8a8a;
-
-        font-size: 12px;
-    }
-
-    .field-error[hidden] {
-        display: none;
-    }
-
-
-    /* ==================================================
-       MENSAJE DE ALERTA DE DJANGO
-    ================================================== */
-
-    .messages-container {
-        margin-bottom: 15px;
-    }
-
-    .alert-msg {
-        padding: 10px 14px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        text-align: center;
-        margin-bottom: 8px;
-    }
-
-    .alert-msg.error {
-        background: rgba(255, 107, 107, 0.15);
-        border: 1px solid rgba(255, 107, 107, 0.45);
-        color: #ff8a8a;
-    }
-
-    .alert-msg.success {
-        background: rgba(46, 211, 154, .12);
-        border: 1px solid rgba(79, 227, 174, .45);
-        color: #4fe3ae;
-    }
-
-
-    /* ==================================================
-       BOTÓN REGISTRAR
-    ================================================== */
-
-    .signup-actions {
-        display: flex;
-        justify-content: center;
-    }
-
-    .signup-actions .btn {
-        max-width: 240px;
-    }
-
-
-    /* ==================================================
-       ENLACE INICIAR SESIÓN
-    ================================================== */
-
-    .signup-footer {
-        margin: 22px 0 0;
-
-        text-align: center;
-
-        color: #9ec8de;
-
-        font-size: 14px;
-    }
-
-    .signup-footer a {
-        color: #ffffff;
-
-        font-weight: 700;
-
-        text-decoration: none;
-
-        transition: .2s;
-    }
-
-    .signup-footer a:hover {
-        color: #32c9f2;
-
-        text-decoration: underline;
-    }
-
-
-    /* ==================================================
-       RESPONSIVE
-    ================================================== */
-
-    @media (max-width: 640px) {
-
-        .signup-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .signup-actions .btn {
-            max-width: none;
-        }
-
-    }
-
-</style>
-
-<main class="login-page">
-
-    <section class="login-card signup-card">
-
-        <!-- LOGO -->
-
-        <div class="brand signup-brand">
-            <div class="brand-circle"></div>
-            <span>WellQ</span>
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<link rel="stylesheet" href="{% static 'css/wellq-photos.css' %}?v=4">
+<link rel="stylesheet" href="{% static 'css/wellq-fotos.css' %}?v=20261104-2">
+
+<main class="login-page signup-page">
+  <section class="signup-shell" aria-labelledby="signup-title">
+    <aside class="signup-identity">
+      <div class="signup-identity-inner">
+        <div class="signup-orb" aria-hidden="true"></div>
+        <div class="signup-logo">WellQ</div>
+        <p class="signup-tagline">Exámenes Médicos<br>más simples y seguros</p>
+      </div>
+    </aside>
+    <div class="signup-content">
+      <h1 id="signup-title">Crear cuenta nueva</h1>
+      <p class="signup-subtitle">Completa los siguientes datos para registrar tu cuenta.</p>
+      {% if messages %}
+        <div class="messages-container" role="status">
+          {% for message in messages %}
+            <div class="alert-msg {% if message.tags %}{{ message.tags }}{% else %}error{% endif %}">{{ message }}</div>
+          {% endfor %}
         </div>
-
-        <h1 class="login-title">
-            Crear cuenta nueva
-        </h1>
-
-        <!-- BLOQUE DE ERRORES / MENSAJES DE DJANGO -->
-        {% if messages %}
-            <div class="messages-container">
-                {% for message in messages %}
-                    <div class="alert-msg {% if message.tags %}{{ message.tags }}{% else %}error{% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-
-        <!-- FORMULARIO CONECTADO A VISTA DJANGO -->
-
-        <form method="POST" action="{% url 'sign_up' %}" class="signup-form">
+      {% endif %}
+<form method="POST" action="{% url 'sign_up' %}" class="signup-form">
 
             {% csrf_token %}
 
@@ -622,25 +293,16 @@
             <div class="signup-actions">
 
                 <button type="button" class="btn btn-primary" id="btn-registrar">
-                    Registrar
+                    Registrar cuenta
                 </button>
 
             </div>
 
         </form>
-
-
-        <!-- INICIAR SESIÓN -->
-
-        <p class="signup-footer">
-            ¿Ya tienes cuenta?
-            <a href="{% url 'login' %}">Inicia sesión</a>
-        </p>
-
-    </section>
-
+<p class="signup-footer">¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+    </div>
+  </section>
 </main>
-
 <script src="{% static 'js/rut.js' %}"></script>
 <script src="{% static 'js/password.js' %}"></script>
 
