@@ -2,7 +2,7 @@ import os
 from django.core.management.base import BaseCommand
 from django.db import connection
 from django.contrib.auth.models import User
-from exams_manager_api.models import Clinico, Paciente
+from exams_manager_api.models import Clinico, Paciente, Region
 
 
 class Command(BaseCommand):
@@ -19,15 +19,20 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"No se encontró el archivo SQL en: {sql_path}"))
             return
 
-        self.stdout.write("Ejecutando script init.sql en la base de datos...")
+        # Los datos de init.sql normalmente ya los carga 'migrate' (migración 0003).
+        # Se evita volver a insertarlos para no duplicar registros.
+        if Region.objects.exists():
+            self.stdout.write("Los datos de init.sql ya están cargados; se omite la inserción.")
+        else:
+            self.stdout.write("Ejecutando script init.sql en la base de datos...")
 
-        with open(sql_path, 'r', encoding='utf-8') as f:
-            sql_statements = f.read()
+            with open(sql_path, 'r', encoding='utf-8-sig') as f:
+                sql_statements = f.read()
 
-        with connection.cursor() as cursor:
-            cursor.execute(sql_statements)
+            with connection.cursor() as cursor:
+                cursor.execute(sql_statements)
 
-        self.stdout.write(self.style.SUCCESS("✔ Script SQL cargado correctamente."))
+            self.stdout.write(self.style.SUCCESS("[OK] Script SQL cargado correctamente."))
 
         # 2. Generación automática de cuentas auth_user para Clínicos
         self.stdout.write("Generando usuarios y contraseñas para Clínicos...")
@@ -49,7 +54,7 @@ class Command(BaseCommand):
             c.save()
 
         self.stdout.write(self.style.SUCCESS(
-            f"✔ Usuarios de Clínicos creados. Contraseña por defecto: {clave_clinico_defecto}"
+            f"[OK] Usuarios de Clínicos creados. Contraseña por defecto: {clave_clinico_defecto}"
         ))
 
         # 3. Generación automática de cuentas auth_user para Pacientes (si existiesen en init.sql)

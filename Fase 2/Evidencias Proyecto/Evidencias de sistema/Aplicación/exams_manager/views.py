@@ -1,11 +1,12 @@
-﻿import requests
+﻿import os
+import requests
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from functools import wraps
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-API_BASE_URL = "http://127.0.0.1:8000/api/v1"
+API_BASE_URL = os.environ.get("API_BASE_URL", "http://127.0.0.1:8000/api/v1")
 ZONA_CHILE = ZoneInfo("America/Santiago")
 
 
@@ -130,6 +131,7 @@ def login(request):
                 request.session['refresh_token'] = data.get('refresh')
                 request.session['user_type'] = data.get('user_type')
                 request.session['nombre_completo'] = data.get('nombre_completo')
+                request.session['clinica'] = data.get('clinica')
                 request.session['rut'] = rut
 
                 messages.success(request, f"Bienvenido/a {data.get('nombre_completo')}")
@@ -164,6 +166,7 @@ def sign_up(request):
         celular = request.POST.get('celular', '').strip()
         password = request.POST.get('password', '')
         direccion_id = request.POST.get('direccion_id', 1)
+        clinica_id = request.POST.get('clinica_id', '').strip()
 
         partes_nombre = nombre_completo.split(' ', 1)
         nombres = partes_nombre[0]
@@ -177,6 +180,8 @@ def sign_up(request):
             'correo': email,
             'celular': int(celular) if celular else None,
             'direccion_id': int(direccion_id),
+            # Clínica elegida en el combobox (la API valida que exista)
+            'clinica': int(clinica_id) if clinica_id.isdigit() else None,
             'password': password
         }
 
@@ -197,7 +202,21 @@ def sign_up(request):
         except requests.exceptions.RequestException:
             messages.error(request, "Error de conexión con el servidor de la API.")
 
-    return render(request, 'exams_manager/sign_up.html')
+    # Clínicas disponibles para el combobox del formulario
+    clinicas = []
+    try:
+        response = requests.get(f"{API_BASE_URL}/clinica/", timeout=5)
+        if response.status_code == 200:
+            clinicas = sorted(response.json(), key=lambda c: c.get('nombre', ''))
+    except requests.exceptions.RequestException:
+        pass
+    if not clinicas:
+        messages.error(request, "No fue posible cargar las clínicas. Intente nuevamente más tarde.")
+
+    return render(request, 'exams_manager/sign_up.html', {
+        'clinicas': clinicas,
+        'clinica_seleccionada': request.POST.get('clinica_id', ''),
+    })
 
 
 # ------------------------------------------------------------------
@@ -231,15 +250,24 @@ def upload(request):
 
         exitos = 0
         errores = 0
+        es_clinico = request.session.get('user_type') == 'clinico'
+        # Paciente al que el clínico asigna los documentos (opcional; la API valida
+        # que sea de su clínica). Para un paciente la API siempre usa su propio perfil.
+        paciente_id = request.POST.get('paciente_id', '').strip() if es_clinico else ''
 
         for f in archivos:
             files = {'archivo': (f.name, f.read(), f.content_type)}
             data = {
                 'titulo': f.name,
                 'sesion': 'Sesión Portal Web',
-                'nota_clinica': 'Documento cargado desde el panel de usuario.',
+                'nota_clinica': (
+                    'Documento cargado por el clínico.' if es_clinico
+                    else 'Documento cargado desde el panel de usuario.'
+                ),
                 'version_archivo': 1
             }
+            if paciente_id:
+                data['paciente'] = paciente_id
 
             response = api_request(request, 'POST', '/examenes/', data=data, files=files, timeout=15)
 
@@ -257,13 +285,20 @@ def upload(request):
 
     response = api_request(request, 'GET', '/examenes/')
     documentos = response.json() if (response and response.status_code == 200) else []
-   
+
+    # El clínico puede elegir a qué paciente de su clínica asignar los documentos
+    pacientes = []
+    if request.session.get('user_type') == 'clinico':
+        response = api_request(request, 'GET', '/examenes/pacientes-asignables/')
+        pacientes = response.json() if (response and response.status_code == 200) else []
 
     context = {
         "nombre_completo": request.session.get('nombre_completo', 'Usuario'),
         "rut": request.session.get('rut', ''),
         "user_type": request.session.get('user_type'),
-        "documentos": documentos
+        "clinica": request.session.get('clinica'),
+        "documentos": documentos,
+        "pacientes": pacientes
     }
 
     return render(request, 'exams_manager/upload.html', context)
@@ -280,6 +315,7 @@ def clinico(request):
         {
             "nombre_completo": request.session.get('nombre_completo'),
             "rut": request.session.get('rut'),
+            "clinica": request.session.get('clinica'),
             "documentos": documentos
         },
     )
@@ -294,22 +330,40 @@ def paciente(request):
         "nombre_completo": request.session.get('nombre_completo', 'Paciente'),
         "rut": request.session.get('rut', 'Sin RUT registrado'),
         "user_type": request.session.get('user_type'),
+        "clinica": request.session.get('clinica'),
         "documentos": documentos,
         "saludo": saludo_actual(request)
     }
 
     return render(request, "exams_manager/paciente.html", context)
 
-@jwt_required
-def eliminar_examen(request, examen_id):
-    """Envía una petición DELETE a la API para eliminar un examen por su ID."""
+def _cambiar_estado_examen(request, examen_id, accion, mensaje_ok, mensaje_error):
+    """Pide a la API deshabilitar o habilitar un examen (no se elimina nunca)."""
     if request.method == 'POST':
-        response = api_request(request, 'DELETE', f'/examenes/{examen_id}/')
+        response = api_request(request, 'POST', f'/examenes/{examen_id}/{accion}/')
 
-        if response and response.status_code in [200, 204]:
-            messages.success(request, "El documento ha sido eliminado exitosamente.")
+        if response and response.status_code == 200:
+            messages.success(request, mensaje_ok)
         else:
-            messages.error(request, "No se pudo eliminar el documento. Intente nuevamente.")
+            messages.error(request, mensaje_error)
 
-    # Redirige de vuelta a la página desde donde se solicitó la eliminación
+    # Redirige de vuelta a la página desde donde se solicitó el cambio
     return redirect(request.META.get('HTTP_REFERER', 'clinico'))
+
+
+@clinico_required
+def deshabilitar_examen(request, examen_id):
+    return _cambiar_estado_examen(
+        request, examen_id, 'deshabilitar',
+        "El documento fue deshabilitado y ya no se puede visualizar.",
+        "No se pudo deshabilitar el documento. Intente nuevamente.",
+    )
+
+
+@clinico_required
+def habilitar_examen(request, examen_id):
+    return _cambiar_estado_examen(
+        request, examen_id, 'habilitar',
+        "El documento fue habilitado nuevamente.",
+        "No se pudo habilitar el documento. Intente nuevamente.",
+    )

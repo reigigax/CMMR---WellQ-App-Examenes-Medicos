@@ -126,6 +126,32 @@ WellQ | Subir Documentos
             <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data" id="uploadForm">
                 {% csrf_token %}
 
+                {% if user_type == 'clinico' %}
+                <!-- ASIGNACIÓN DEL DOCUMENTO (solo clínicos): pacientes de su misma clínica -->
+                <div class="assign-patient">
+                    <label for="pacienteSelect">Asignar documento al paciente</label>
+                    <select id="pacienteSelect" name="paciente_id">
+                        <option value="">Sin asignar (visible solo para los clínicos de la clínica)</option>
+                        {% for p in pacientes %}
+                            <option value="{{ p.id }}">{{ p.nombres }} {{ p.apellidos }} — RUT {{ p.rut }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if not pacientes %}
+                        <small>Su clínica aún no tiene pacientes registrados.</small>
+                    {% endif %}
+                </div>
+                <style>
+                    .assign-patient { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+                    .assign-patient label { color: #ffffff; font-weight: 700; font-size: 14px; }
+                    .assign-patient select {
+                        min-height: 46px; padding: 0 14px; border-radius: 8px;
+                        border: 1px solid #2a6f8f; background: #0b2233; color: #ffffff; font-size: 14px;
+                    }
+                    .assign-patient select:focus { outline: 2px solid #00bde8; outline-offset: 1px; }
+                    .assign-patient small { color: #7faec2; font-size: 12px; }
+                </style>
+                {% endif %}
+
                 <div class="drop-zone" id="dropZone">
 
                     <div class="cloud-icon">
@@ -232,6 +258,8 @@ WellQ | Subir Documentos
                                 <td>
                                     {% if doc.archivo %}
                                         <a href="{{ doc.archivo }}" target="_blank" style="color: #32c9f2; font-weight: 600; text-decoration: none;">Ver / Descargar</a>
+                                    {% elif doc.habilitado is False %}
+                                        <span style="color: #888;">Deshabilitado</span>
                                     {% else %}
                                         <span style="color: #888;">Sin archivo</span>
                                     {% endif %}

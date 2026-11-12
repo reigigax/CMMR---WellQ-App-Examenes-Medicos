@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   db:
     image: postgres:16-alpine
@@ -12,7 +11,37 @@ services:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      # 'init.sql' ya NO se monta en /docker-entrypoint-initdb.d/: ese script corre
+      # antes de que existan las tablas. Los datos se cargan con 'python manage.py migrate'
+      # (migración exams_manager_api/0003_cargar_datos_iniciales).
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Aplicación Django: front (exams_manager) + API REST (exams_manager_api)
+  web:
+    build: .
+    container_name: wellq_django_web
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Dentro de la red de Docker la base de datos se alcanza por el nombre
+      # del servicio 'db' y su puerto interno (5432), no por localhost.
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      # El front consume la API dentro del mismo contenedor.
+      API_BASE_URL: http://127.0.0.1:8000/api/v1
+    ports:
+      - "8000:8000"
+    volumes:
+      # Monta el código para que los cambios se reflejen sin reconstruir la imagen
+      # (runserver se recarga solo) y para conservar los archivos subidos en ./media.
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:

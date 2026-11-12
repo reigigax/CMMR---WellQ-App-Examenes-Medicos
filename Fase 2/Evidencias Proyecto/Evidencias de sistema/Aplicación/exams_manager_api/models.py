@@ -71,6 +71,15 @@ class Paciente(models.Model):
         related_name='pacientes'
     )
 
+    # Clínica a la que pertenece el paciente. Solo los clínicos de esta clínica
+    # pueden ver sus documentos. La elige el paciente en el formulario de registro.
+    clinica = models.ForeignKey(
+        'Clinica',
+        on_delete=models.PROTECT,
+        db_column='clinica_fk',
+        related_name='pacientes'
+    )
+
     class Meta:
         db_table = 'paciente'
 
@@ -134,6 +143,10 @@ class Examen(models.Model):
     nota_clinica = models.CharField(max_length=500, null=True, blank=True)
     fecha_subido = models.DateField(auto_now_add=True)
     version_archivo = models.SmallIntegerField(default=1)
+
+    # Un examen deshabilitado por un clínico no se elimina: el registro y el
+    # archivo se conservan, pero el archivo deja de poder visualizarse/descargarse.
+    habilitado = models.BooleanField(default=True)
 
     archivo = models.FileField(
         upload_to='examenes_medicos/',

@@ -13,10 +13,20 @@ from .models import Region, Comuna, Direccion, Paciente, Clinica, Clinico, Exame
 class PacienteRegistroSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
     direccion_id = serializers.IntegerField(write_only=True, required=False, default=1)
+    # Clínica elegida por el paciente en el formulario de registro (obligatoria)
+    clinica = serializers.PrimaryKeyRelatedField(
+        queryset=Clinica.objects.all(),
+        error_messages={
+            'required': "Debe seleccionar una clínica.",
+            'null': "Debe seleccionar una clínica.",
+            'does_not_exist': "La clínica seleccionada no existe.",
+            'incorrect_type': "La clínica seleccionada no es válida.",
+        },
+    )
 
     class Meta:
         model = Paciente
-        fields = ['rut', 'nombres', 'apellidos', 'correo', 'celular', 'direccion_id', 'password']
+        fields = ['rut', 'nombres', 'apellidos', 'correo', 'celular', 'direccion_id', 'clinica', 'password']
 
     def validate_rut(self, value):
         if Paciente.objects.filter(rut=value).exists() or User.objects.filter(username=value).exists():
@@ -43,6 +53,7 @@ class PacienteRegistroSerializer(serializers.ModelSerializer):
                 })
 
         # 2. Transacción atómica para crear User y Paciente en conjunto
+        #    (la clínica elegida viene en validated_data['clinica'])
         with transaction.atomic():
             user = User.objects.create_user(
                 username=validated_data['rut'],
@@ -91,12 +102,19 @@ class RutTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Identificar el tipo de usuario y adjuntar datos al response
         data['user_type'] = 'unknown'
+        data['clinica'] = None
+        perfil = None
         if hasattr(user, 'paciente_profile'):
             data['user_type'] = 'paciente'
-            data['nombre_completo'] = f"{user.paciente_profile.nombres} {user.paciente_profile.apellidos}"
+            perfil = user.paciente_profile
         elif hasattr(user, 'clinico_profile'):
             data['user_type'] = 'clinico'
-            data['nombre_completo'] = f"{user.clinico_profile.nombres} {user.clinico_profile.apellidos}"
+            perfil = user.clinico_profile
+
+        if perfil:
+            data['nombre_completo'] = f"{perfil.nombres} {perfil.apellidos}"
+            # Nombre de la clínica a la que pertenece (se muestra en el navbar del front)
+            data['clinica'] = perfil.clinica.nombre if perfil.clinica_id else None
 
         return data
 
@@ -121,6 +139,13 @@ class PacienteSerializer(serializers.ModelSerializer):
         model = Paciente
         fields = '__all__'
 
+
+class PacienteResumenSerializer(serializers.ModelSerializer):
+    """Datos básicos del paciente que se muestran junto a cada examen."""
+    class Meta:
+        model = Paciente
+        fields = ['id', 'rut', 'nombres', 'apellidos', 'clinica']
+
 class ClinicaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clinica
@@ -132,6 +157,18 @@ class ClinicoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ExamenSerializer(serializers.ModelSerializer):
+    # Usado por la vista del clínico para mostrar nombre y RUT del paciente
+    paciente_detail = PacienteResumenSerializer(source='paciente', read_only=True)
+
     class Meta:
         model = Examen
         fields = '__all__'
+        # Solo se cambia con las acciones 'deshabilitar'/'habilitar' del clínico
+        read_only_fields = ['habilitado']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Si el examen está deshabilitado no se entrega la URL del archivo
+        if not instance.habilitado:
+            data['archivo'] = None
+        return data

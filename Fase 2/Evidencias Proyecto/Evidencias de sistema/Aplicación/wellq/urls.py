@@ -1,7 +1,21 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, re_path, include
 from django.conf import settings
-from django.conf.urls.static import static
+from django.http import Http404
+from django.views.static import serve
+
+from exams_manager_api.models import Examen
+
+
+def servir_media(request, path):
+    """
+    Sirve los archivos subidos, excepto los de exámenes deshabilitados por un
+    clínico: esos devuelven 404 aunque se conozca la URL.
+    """
+    if Examen.objects.filter(archivo=path, habilitado=False).exists():
+        raise Http404("Documento deshabilitado.")
+    return serve(request, path, document_root=settings.MEDIA_ROOT)
+
 
 urlpatterns = [
     # Urls de Administracion
@@ -14,7 +28,7 @@ urlpatterns = [
     path('', include('exams_manager.urls')),
 ]
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
-    )
+    media_prefix = settings.MEDIA_URL.lstrip('/')
+    urlpatterns += [
+        re_path(rf'^{media_prefix}(?P<path>.*)$', servir_media),
+    ]

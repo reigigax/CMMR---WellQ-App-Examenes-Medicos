@@ -4,7 +4,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
-<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<link rel="stylesheet" href="{% static 'css/signup.css' %}?v=20261112-1">
 <link rel="stylesheet" href="{% static 'css/wellq-photos.css' %}?v=4">
 <link rel="stylesheet" href="{% static 'css/wellq-fotos.css' %}?v=20261104-2">
 
@@ -133,6 +133,34 @@
                     >
 
                     <p class="field-error" id="error-celular" hidden>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                        <span class="error-text"></span>
+                    </p>
+
+                </div>
+
+
+                <!-- CLÍNICA (el paciente elige a qué clínica pertenece) -->
+
+                <div class="field field-full">
+
+                    <label for="clinica_id">
+                        Clínica
+                    </label>
+
+                    <select
+                        id="clinica_id"
+                        name="clinica_id"
+                        aria-describedby="error-clinica_id"
+                        required
+                    >
+                        <option value="" {% if not clinica_seleccionada %}selected{% endif %} disabled>Selecciona tu clínica</option>
+                        {% for c in clinicas %}
+                            <option value="{{ c.id }}" {% if clinica_seleccionada == c.id|stringformat:"s" %}selected{% endif %}>{{ c.nombre }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <p class="field-error" id="error-clinica_id" hidden>
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
                         <span class="error-text"></span>
                     </p>
@@ -525,6 +553,9 @@
                 if (valor === "") return "Ingresa tu celular";
                 return /^9\d{8}$/.test(valor) || "Debe tener 9 dígitos y comenzar con 9";
             },
+            clinica_id: function (valor) {
+                return valor !== "" || "Selecciona tu clínica";
+            },
             password: function (valor) {
                 if (valor === "") return "Ingresa una contraseña";
                 return evaluarPassword(valor).nivel !== "debil" || "La contraseña debe ser al menos Regular";
@@ -562,6 +593,9 @@
             const input = document.getElementById(id);
             if (input) {
                 input.addEventListener("input", function () {
+                    limpiarError(input);
+                });
+                input.addEventListener("change", function () {
                     limpiarError(input);
                 });
             }

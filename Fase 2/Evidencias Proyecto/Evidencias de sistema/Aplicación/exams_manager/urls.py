@@ -12,5 +12,6 @@ urlpatterns = [
     path('sign_up/', views.sign_up, name='sign_up'),
     path('upload/', views.upload, name='upload'),
     path('paciente/', views.paciente, name='paciente'),
-    path('examenes/eliminar/<int:examen_id>/', views.eliminar_examen, name='eliminar_examen'),
+    path('examenes/deshabilitar/<int:examen_id>/', views.deshabilitar_examen, name='deshabilitar_examen'),
+    path('examenes/habilitar/<int:examen_id>/', views.habilitar_examen, name='habilitar_examen'),
 ]
